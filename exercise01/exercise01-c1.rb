@@ -26,7 +26,7 @@ $students = [
 ]
 
 
-def printStudent
+def print_student
     puts "----------------Danh sách sinh viên-----------------"
    $students.each do |student|
     puts "Mã sinh viên: #{student[:ma_sv]}"
@@ -38,7 +38,7 @@ def printStudent
 end
 
 
-def addStudent
+def add_student
     puts "----------------Thêm sinh viên-----------------"
     print "Nhập mã sinh viên: "
     ma_sv = gets.chomp
@@ -67,7 +67,7 @@ def addStudent
 end
 
 
-def findStudent
+def find_student
     print "Nhập mã sinh viên: "
     ma_sv = gets.chomp
     infor_student = nil
@@ -89,7 +89,7 @@ end
 end
 
 
-def scoreAvgStudent
+def score_avg_student
     sum = 0
   $students.each do |student|
     sum += student[:diem]
@@ -98,8 +98,13 @@ def scoreAvgStudent
     puts "Điểm trung bình của sinh viên là: #{avg}"
 end
 
-def maxScoreStudent
-  user = $students.max_by{ |student| student[:diem] }
+def max_score_student
+  user = nil
+  $students.each do |student|
+    if user.nil? || student[:diem] > user[:diem]
+      user = student
+    end
+  end
   puts "Sinh viên có điểm cao nhất:"
   puts "Mã sinh viên: #{user[:ma_sv]}"
   puts "Tên sinh viên: #{user[:ten]}"
@@ -108,7 +113,7 @@ def maxScoreStudent
 end
 
 
-def filterListAgeStudent
+def filter_list_age_student
     puts"----------------Danh sách sinh viên theo tuổi-----------------"
     print "Nhập tuổi sinh viên: "
     tuoi = gets.chomp.to_i
@@ -123,7 +128,7 @@ def filterListAgeStudent
     end
 end
 
-def removeStudent
+def remove_student
     print "Nhập mã sinh viên cần xóa: "
     ma_sv = gets.chomp
     $students.each_with_index do |student, index|
@@ -152,19 +157,19 @@ def menu
     choice = gets.chomp
     case choice
     when "1"
-        addStudent()
+        add_student
     when "2"
-        printStudent()
+        print_student
     when "3"
-        findStudent()
+        find_student
     when "4"
-        scoreAvgStudent()
+        score_avg_student
     when "5"
-        maxScoreStudent()
+        max_score_student
     when "6"
-        filterListAgeStudent()
+        filter_list_age_student
     when "7"
-        removeStudent()
+        remove_student
     when "8"
         return
     else
@@ -173,4 +178,4 @@ def menu
 end 
 end
 
-menu()
+menu
