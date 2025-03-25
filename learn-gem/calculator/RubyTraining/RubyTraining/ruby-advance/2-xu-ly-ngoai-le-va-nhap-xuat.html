@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Xử lý ngoại lệ và nhập xuất dữ liệu trong Ruby</title>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.25.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.25.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.25.0/components/prism-ruby.min.js"></script>
+</head>
+<body>
+    <header>
+        <h1 style="text-align: center; color: #fff;">Ruby Advance</h1>
+    </header>
+    <div class="navigation" style="text-align: center; font-size: 20px;">
+      <a href="../index.html" class="home">Home</a>
+    </div>
+    <main>
+        <section class="lesson-content">
+            <h2>Xử lý ngoại lệ và nhập xuất dữ liệu trong Ruby</h2>
+
+            <h3>1. Xử lý ngoại lệ (Exception Handling)</h3>
+            <p>Xử lý ngoại lệ là một phần quan trọng trong lập trình, giúp ứng dụng xử lý các tình huống bất thường mà không bị dừng đột ngột. Ruby cung cấp cơ chế xử lý ngoại lệ mạnh mẽ và linh hoạt.</p>
+
+            <h4>Cấu trúc cơ bản:</h4>
+            <pre><code class="language-ruby">begin
+  # Mã có thể gây ra ngoại lệ
+rescue
+  # Xử lý khi ngoại lệ xảy ra
+else
+  # Thực thi nếu không có ngoại lệ nào xảy ra
+ensure
+  # Luôn được thực thi, bất kể có ngoại lệ hay không
+end</code></pre>
+
+            <h4>Ví dụ đơn giản:</h4>
+            <pre><code class="language-ruby">begin
+  puts "Nhập một số: "
+  so = Integer(gets.chomp)
+  puts "Số bạn nhập là: #{so}"
+rescue ArgumentError
+  puts "Lỗi: Bạn không nhập một số hợp lệ!"
+end</code></pre>
+
+            <h4>Xử lý nhiều loại ngoại lệ:</h4>
+            <pre><code class="language-ruby">begin
+  # Mở file không tồn tại
+  file = File.open("khong_ton_tai.txt")
+  content = file.read
+  puts content
+rescue Errno::ENOENT
+  puts "Lỗi: File không tồn tại!"
+rescue Errno::EACCES
+  puts "Lỗi: Không có quyền truy cập file!"
+rescue => e
+  puts "Lỗi không xác định: #{e.message}"
+ensure
+  file.close if file
+end</code></pre>
+
+            <h4>Tạo và ném ngoại lệ tùy chỉnh:</h4>
+            <pre><code class="language-ruby">class SoAmError < StandardError
+  def initialize(msg="Không chấp nhận số âm")
+    super
+  end
+end
+
+def tinh_can_bac_hai(so)
+  if so < 0
+    raise SoAmError, "Không thể tính căn bậc hai của số âm #{so}"
+  end
+  Math.sqrt(so)
+end
+
+begin
+  ket_qua = tinh_can_bac_hai(-5)
+  puts "Kết quả: #{ket_qua}"
+rescue SoAmError => e
+  puts "Lỗi: #{e.message}"
+end</code></pre>
+
+            <h4>Retry và Raise:</h4>
+            <pre><code class="language-ruby">so_lan_thu = 0
+
+begin
+  puts "Đang thử kết nối đến máy chủ..."
+  # Giả lập lỗi kết nối
+  raise "Lỗi kết nối" if so_lan_thu < 3
+  puts "Kết nối thành công!"
+rescue => e
+  so_lan_thu += 1
+  puts "Lỗi: #{e.message}. Thử lại lần #{so_lan_thu}..."
+  sleep 1  # Đợi 1 giây trước khi thử lại
+  retry if so_lan_thu < 5
+  puts "Đã thử #{so_lan_thu} lần nhưng không thành công."
+end</code></pre>
+
+            <div class="note">
+                <p><strong>Lưu ý:</strong> Chỉ bắt những ngoại lệ mà bạn có thể xử lý một cách có ý nghĩa. Không nên bắt tất cả các ngoại lệ mà không có xử lý cụ thể, vì điều này có thể che giấu các lỗi nghiêm trọng.</p>
+            </div>
+
+            <h3>Các thành phần xử lý ngoại lệ trong Ruby</h3>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th style="text-align: start;">Thành phần</th>
+                        <th style="text-align: start;">Mô tả</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>begin</code></td>
+                        <td>Bắt đầu khối xử lý lỗi</td>
+                    </tr>
+                    <tr>
+                        <td><code>rescue</code></td>
+                        <td>Bắt lỗi và xử lý</td>
+                    </tr>
+                    <tr>
+                        <td><code>rescue => e</code></td>
+                        <td>Bắt lỗi và lấy thông tin lỗi</td>
+                    </tr>
+                    <tr>
+                        <td><code>else</code></td>
+                        <td>Chạy khi không có lỗi</td>
+                    </tr>
+                    <tr>
+                        <td><code>ensure</code></td>
+                        <td>Luôn chạy, dù có lỗi hay không</td>
+                    </tr>
+                    <tr>
+                        <td><code>retry</code></td>
+                        <td>Thử lại sau khi bắt lỗi</td>
+                    </tr>
+                    <tr>
+                        <td><code>raise</code></td>
+                        <td>Chủ động tạo lỗi</td>
+                    </tr>
+                    <tr>
+                        <td><code>rescue StandardError => e</code></td>
+                        <td>Bắt tất cả lỗi con của StandardError</td>
+                    </tr>
+                    <tr>
+                        <td><code>rescue Exception => e</code></td>
+                        <td>Bắt mọi lỗi (cẩn thận khi dùng)</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>2. Nhập xuất dữ liệu (I/O Operations)</h3>
+
+            <h4>Nhập dữ liệu từ bàn phím:</h4>
+            <pre><code class="language-ruby"># Đọc một dòng từ bàn phím
+puts "Nhập tên của bạn:"
+ten = gets.chomp  # chomp loại bỏ ký tự xuống dòng ở cuối
+puts "Xin chào, #{ten}!"
+
+# Đọc và chuyển đổi kiểu dữ liệu
+puts "Nhập tuổi của bạn:"
+tuoi = gets.chomp.to_i  # chuyển đổi sang số nguyên
+puts "Sau 5 năm, bạn sẽ #{tuoi + 5} tuổi."</code></pre>
+
+            <h4>Xuất dữ liệu ra màn hình:</h4>
+            <pre><code class="language-ruby"># puts - in ra và xuống dòng
+puts "Dòng 1"
+puts "Dòng 2"
+
+# print - in ra không xuống dòng
+print "Hello "
+print "World"
+puts "!"  # Kết quả: Hello World!
+
+# p - hiển thị dữ liệu dưới dạng debug
+p "Hello\nWorld"  # Hiển thị: "Hello\nWorld"
+puts "Hello\nWorld"  # Hiển thị: Hello
+                     #           World
+
+# printf - định dạng đầu ra
+printf "Số nguyên: %d, Số thực: %.2f, Chuỗi: %s\n", 10, 3.14159, "Ruby"</code></pre>
+
+            <h4>Làm việc với file:</h4>
+
+            <h5>Đọc file:</h5>
+            <pre><code class="language-ruby"># Đọc toàn bộ file vào một chuỗi
+noi_dung = File.read("example.txt")
+puts noi_dung
+
+# Đọc file theo từng dòng
+File.open("example.txt", "r") do |file|
+  file.each_line do |line|
+    puts line
+  end
+end
+
+# Đọc file theo từng dòng với số thứ tự
+File.open("example.txt", "r") do |file|
+  file.each_line.with_index(1) do |line, index|
+    puts "#{index}: #{line}"
+  end
+end</code></pre>
+
+            <h5>Ghi file:</h5>
+            <pre><code class="language-ruby"># Ghi đè nội dung file
+File.open("output.txt", "w") do |file|
+  file.puts "Dòng 1"
+  file.puts "Dòng 2"
+  file.puts "Dòng 3"
+end
+
+# Thêm nội dung vào cuối file
+File.open("output.txt", "a") do |file|
+  file.puts "Dòng được thêm vào"
+end
+
+# Ghi nội dung vào file một cách ngắn gọn
+File.write("output.txt", "Nội dung mới", mode: "w")
+File.write("output.txt", "\nThêm nội dung", mode: "a")</code></pre>
+
+            <h5>Làm việc với thư mục:</h5>
+            <pre><code class="language-ruby"># Liệt kê các file trong thư mục
+Dir.entries(".").each do |entry|
+  puts entry
+end
+
+# Lọc các file theo mẫu
+Dir.glob("*.txt").each do |file|
+  puts file
+end
+
+# Tạo thư mục mới
+Dir.mkdir("thu_muc_moi") unless Dir.exist?("thu_muc_moi")
+
+# Xóa thư mục
+Dir.rmdir("thu_muc_moi") if Dir.exist?("thu_muc_moi") && Dir.empty?("thu_muc_moi")</code></pre>
+
+            <h4>Làm việc với JSON:</h4>
+            <pre><code class="language-ruby">require 'json'
+
+# Chuyển đổi Hash thành chuỗi JSON
+du_lieu = {
+  ten: "Nguyễn Văn A",
+  tuoi: 30,
+  dia_chi: {
+    duong: "Lê Lợi",
+    quan: "Hoàn Kiếm",
+    thanh_pho: "Hà Nội"
+  },
+  so_thich: ["Đọc sách", "Du lịch", "Thể thao"]
+}
+
+json_string = du_lieu.to_json
+puts json_string
+
+# Chuyển đổi chuỗi JSON thành Hash
+du_lieu_moi = JSON.parse(json_string)
+puts "Tên: #{du_lieu_moi['ten']}"
+puts "Thành phố: #{du_lieu_moi['dia_chi']['thanh_pho']}"
+puts "Sở thích đầu tiên: #{du_lieu_moi['so_thich'][0]}"
+
+# Đọc và ghi file JSON
+File.write("du_lieu.json", json_string)
+du_lieu_doc = JSON.parse(File.read("du_lieu.json"))</code></pre>
+
+            <h4>Làm việc với CSV:</h4>
+            <pre><code class="language-ruby">require 'csv'
+
+# Ghi dữ liệu vào file CSV
+CSV.open("sinh_vien.csv", "w") do |csv|
+  csv << ["ID", "Họ tên", "Tuổi", "Điểm trung bình"]
+  csv << [1, "Nguyễn Văn A", 20, 8.5]
+  csv << [2, "Trần Thị B", 21, 9.0]
+  csv << [3, "Lê Văn C", 19, 7.5]
+end
+
+# Đọc dữ liệu từ file CSV
+puts "Danh sách sinh viên:"
+CSV.foreach("sinh_vien.csv", headers: true) do |row|
+  puts "#{row['ID']}. #{row['Họ tên']} - #{row['Tuổi']} tuổi - ĐTB: #{row['Điểm trung bình']}"
+end</code></pre>
+
+            <h3>3. Thực hành</h3>
+
+            <div class="note">
+                <h4>Bài 1: Quản lý danh bạ điện thoại</h4>
+                <p>Xây dựng một ứng dụng quản lý danh bạ điện thoại đơn giản với các chức năng: thêm, xóa, sửa, tìm kiếm và hiển thị danh bạ. Dữ liệu được lưu trong file CSV.</p>
+
+                <pre><code class="language-ruby">require 'csv'
+
+class DanhBa
+  HEADERS = ["ID", "Tên", "Số điện thoại", "Email"]
+  FILE_PATH = "danh_ba.csv"
+
+  def initialize
+    # Tạo file nếu chưa tồn tại
+    unless File.exist?(FILE_PATH)
+      CSV.open(FILE_PATH, "w") do |csv|
+        csv << HEADERS
+      end
+    end
+  end
+
+  def hien_thi_danh_ba
+    puts "\n=== DANH BẠ ĐIỆN THOẠI ==="
+
+    if File.empty?(FILE_PATH) || CSV.read(FILE_PATH).size <= 1
+      puts "Danh bạ trống!"
+      return
+    end
+
+    CSV.foreach(FILE_PATH, headers: true) do |row|
+      puts "#{row['ID']}. #{row['Tên']} - #{row['Số điện thoại']} - #{row['Email']}"
+    end
+  end
+
+  def them_lien_he
+    begin
+      puts "\n=== THÊM LIÊN HỆ MỚI ==="
+
+      # Đọc ID cuối cùng
+      id = 1
+      CSV.foreach(FILE_PATH, headers: true) do |row|
+        id = row['ID'].to_i + 1 if row['ID'].to_i >= id
+      end
+
+      print "Nhập tên: "
+      ten = gets.chomp
+
+      print "Nhập số điện thoại: "
+      sdt = gets.chomp
+
+      print "Nhập email: "
+      email = gets.chomp
+
+      # Kiểm tra dữ liệu
+      if ten.empty? || sdt.empty?
+        raise "Tên và số điện thoại không được để trống!"
+      end
+
+      # Thêm vào file CSV
+      CSV.open(FILE_PATH, "a") do |csv|
+        csv << [id, ten, sdt, email]
+      end
+
+      puts "Đã thêm liên hệ thành công!"
+    rescue => e
+      puts "Lỗi: #{e.message}"
+    end
+  end
+
+  def xoa_lien_he
+    begin
+      hien_thi_danh_ba
+
+      puts "\n=== XÓA LIÊN HỆ ==="
+      print "Nhập ID liên hệ cần xóa: "
+      id = gets.chomp.to_i
+
+      # Đọc tất cả dữ liệu
+      rows = CSV.read(FILE_PATH, headers: true)
+
+      # Tìm và xóa liên hệ
+      found = false
+      rows.each do |row|
+        if row['ID'].to_i == id
+          found = true
+          break
+        end
+      end
+
+      if !found
+        raise "Không tìm thấy liên hệ với ID #{id}!"
+      end
+
+      # Ghi lại file không có liên hệ đã xóa
+      CSV.open(FILE_PATH, "w") do |csv|
+        csv << HEADERS
+        rows.each do |row|
+          csv << row if row['ID'].to_i != id
+        end
+      end
+
+      puts "Đã xóa liên hệ thành công!"
+    rescue => e
+      puts "Lỗi: #{e.message}"
+    end
+  end
+
+  def sua_lien_he
+    begin
+      hien_thi_danh_ba
+
+      puts "\n=== SỬA LIÊN HỆ ==="
+      print "Nhập ID liên hệ cần sửa: "
+      id = gets.chomp.to_i
+
+      # Đọc tất cả dữ liệu
+      rows = CSV.read(FILE_PATH, headers: true)
+
+      # Tìm liên hệ cần sửa
+      found = false
+      rows.each do |row|
+        if row['ID'].to_i == id
+          found = true
+
+          print "Nhập tên mới (#{row['Tên']}): "
+          ten = gets.chomp
+          ten = row['Tên'] if ten.empty?
+
+          print "Nhập số điện thoại mới (#{row['Số điện thoại']}): "
+          sdt = gets.chomp
+          sdt = row['Số điện thoại'] if sdt.empty?
+
+          print "Nhập email mới (#{row['Email']}): "
+          email = gets.chomp
+          email = row['Email'] if email.empty?
+
+          # Cập nhật dữ liệu
+          row['Tên'] = ten
+          row['Số điện thoại'] = sdt
+          row['Email'] = email
+
+          break
+        end
+      end
+
+      if !found
+        raise "Không tìm thấy liên hệ với ID #{id}!"
+      end
+
+      # Ghi lại file với dữ liệu đã cập nhật
+      CSV.open(FILE_PATH, "w") do |csv|
+        csv << HEADERS
+        rows.each do |row|
+          csv << row
+        end
+      end
+
+      puts "Đã cập nhật liên hệ thành công!"
+    rescue => e
+      puts "Lỗi: #{e.message}"
+    end
+  end
+
+  def tim_kiem
+    begin
+      puts "\n=== TÌM KIẾM LIÊN HỆ ==="
+      print "Nhập từ khóa tìm kiếm: "
+      keyword = gets.chomp.downcase
+
+      if keyword.empty?
+        raise "Từ khóa tìm kiếm không được để trống!"
+      end
+
+      puts "\nKết quả tìm kiếm:"
+      found = false
+
+      CSV.foreach(FILE_PATH, headers: true) do |row|
+        if row['Tên'].downcase.include?(keyword) ||
+           row['Số điện thoại'].include?(keyword) ||
+           row['Email'].downcase.include?(keyword)
+          puts "#{row['ID']}. #{row['Tên']} - #{row['Số điện thoại']} - #{row['Email']}"
+          found = true
+        end
+      end
+
+      puts "Không tìm thấy kết quả nào!" if !found
+    rescue => e
+      puts "Lỗi: #{e.message}"
+    end
+  end
+
+  def menu
+    loop do
+      puts "\n=== QUẢN LÝ DANH BẠ ==="
+      puts "1. Hiển thị danh bạ"
+      puts "2. Thêm liên hệ"
+      puts "3. Sửa liên hệ"
+      puts "4. Xóa liên hệ"
+      puts "5. Tìm kiếm"
+      puts "0. Thoát"
+
+      print "Chọn chức năng: "
+      choice = gets.chomp.to_i
+
+      case choice
+      when 1
+        hien_thi_danh_ba
+      when 2
+        them_lien_he
+      when 3
+        sua_lien_he
+      when 4
+        xoa_lien_he
+      when 5
+        tim_kiem
+      when 0
+        puts "Tạm biệt!"
+        break
+      else
+        puts "Lựa chọn không hợp lệ!"
+      end
+    end
+  end
+end
+
+# Chạy ứng dụng
+danh_ba = DanhBa.new
+danh_ba.menu</code></pre>
+            </div>
+
+            <div class="warning">
+                <h4>Bài 2: Xử lý file log đơn giản</h4>
+                <p>Xây dựng một chương trình đọc file log, phân tích và tạo báo cáo thống kê.</p>
+
+                <pre><code class="language-ruby">class LogAnalyzer
+  def initialize(file_path)
+    @file_path = file_path
+    @log_entries = []
+    @error_count = 0
+    @warning_count = 0
+    @info_count = 0
+  end
+
+  def analyze
+    begin
+      puts "Đang phân tích file log: #{@file_path}"
+
+      # Kiểm tra file tồn tại
+      unless File.exist?(@file_path)
+        raise "File log không tồn tại!"
+      end
+
+      # Đọc và phân tích file
+      File.open(@file_path, "r") do |file|
+        file.each_line do |line|
+          @log_entries << line.chomp
+
+          # Đếm số lượng các loại log
+          @error_count += 1 if line.include?("[ERROR]")
+          @warning_count += 1 if line.include?("[WARNING]")
+          @info_count += 1 if line.include?("[INFO]")
+        end
+      end
+
+      puts "Phân tích hoàn tất!"
+    rescue => e
+      puts "Lỗi khi phân tích file log: #{e.message}"
+    end
+  end
+
+  def generate_report
+    begin
+      report_file = "log_report.txt"
+
+      File.open(report_file, "w") do |file|
+        file.puts "=== BÁO CÁO PHÂN TÍCH LOG ==="
+        file.puts "File gốc: #{@file_path}"
+        file.puts "Thời gian phân tích: #{Time.now}"
+        file.puts "Tổng số dòng log: #{@log_entries.size}"
+        file.puts "Số lỗi (ERROR): #{@error_count}"
+        file.puts "Số cảnh báo (WARNING): #{@warning_count}"
+        file.puts "Số thông tin (INFO): #{@info_count}"
+        file.puts "\n=== CHI TIẾT LỖI ==="
+
+        # Liệt kê các lỗi
+        @log_entries.each do |entry|
+          file.puts entry if entry.include?("[ERROR]")
+        end
+      end
+
+      puts "Đã tạo báo cáo: #{report_file}"
+    rescue => e
+      puts "Lỗi khi tạo báo cáo: #{e.message}"
+    end
+  end
+
+  def self.create_sample_log
+    begin
+      sample_file = "sample_log.txt"
+
+      File.open(sample_file, "w") do |file|
+        file.puts "2023-03-15 10:15:23 [INFO] Ứng dụng khởi động"
+        file.puts "2023-03-15 10:15:24 [INFO] Kết nối cơ sở dữ liệu thành công"
+        file.puts "2023-03-15 10:16:30 [WARNING] Truy cập chậm vào bảng users"
+        file.puts "2023-03-15 10:17:45 [ERROR] Không thể kết nối đến máy chủ email"
+        file.puts "2023-03-15 10:18:12 [INFO] Người dùng user123 đăng nhập"
+        file.puts "2023-03-15 10:20:05 [WARNING] Sử dụng nhiều bộ nhớ"
+        file.puts "2023-03-15 10:22:18 [ERROR] Lỗi truy vấn SQL: syntax error at line 42"
+        file.puts "2023-03-15 10:25:30 [INFO] Người dùng user123 đăng xuất"
+        file.puts "2023-03-15 10:30:15 [ERROR] Không thể tạo file tạm"
+        file.puts "2023-03-15 10:35:22 [INFO] Ứng dụng đóng"
+      end
+
+      puts "Đã tạo file log mẫu: #{sample_file}"
+      return sample_file
+    rescue => e
+      puts "Lỗi khi tạo file log mẫu: #{e.message}"
+      return nil
+    end
+  end
+end
+
+# Chạy chương trình
+sample_log = LogAnalyzer.create_sample_log
+if sample_log
+  analyzer = LogAnalyzer.new(sample_log)
+  analyzer.analyze
+  analyzer.generate_report
+end</code></pre>
+            </div>
+        </section>
+    </main>
+    <footer>
+        <div class="lesson-navigation" style="padding: 20px;">
+            <a href="1-oop-nang-cao.html" class="prev">Back</a>
+            <a href="3-tich-hop-voi-co-so-du-lieu.html" class="next">Next</a>
+        </div>
+    </footer>
+</body>
+</html>
