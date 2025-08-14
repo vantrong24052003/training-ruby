@@ -1,5 +1,7 @@
+# frozen_string_literal: true
+
 # lib/my_calculator.rb
-require_relative "my_gem/version"
+require_relative 'my_gem/version'
 
 module MyGem
   class Error < StandardError; end
@@ -18,7 +20,8 @@ module MyGem
     end
 
     def divide(a, b)
-      raise Error, "Không thể chia cho 0" if b.zero?
+      raise Error, 'Không thể chia cho 0' if b.zero?
+
       a / b.to_f
     end
   end

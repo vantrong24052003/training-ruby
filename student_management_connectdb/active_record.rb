@@ -11,6 +11,7 @@ module ActiveModel
       base.extend(ClassMethods)
       base.class_eval do
         include InstanceMethods
+
         @records = []
       end
     end

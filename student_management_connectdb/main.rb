@@ -91,6 +91,5 @@ class UserManagementApp
   end
 end
 
-
 app = UserManagementApp.new
 app.run
