@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gem và Package Management trong Ruby</title>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.25.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.25.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.25.0/components/prism-ruby.min.js"></script>
+</head>
+<body>
+    <header>
+        <h1 style="text-align: center; color: #fff;">Ruby Advance</h1>
+    </header>
+    <div class="navigation" style="text-align: center; font-size: 20px;">
+      <a href="../index.html" class="home">Home</a>
+    </div>
+    <main>
+        <section class="lesson-content">
+            <h2>4. Gem và Package Management</h2>
+
+            <h3>1. Sử dụng RubyGems</h3>
+            <p>RubyGems là hệ thống quản lý gói cho Ruby, cho phép bạn cài đặt và quản lý các thư viện Ruby (gems) một cách dễ dàng. RubyGems đã được tích hợp sẵn trong Ruby từ phiên bản 1.9 trở đi.</p>
+
+            <h4>Cài đặt và sử dụng gem:</h4>
+            <pre><code class="language-ruby"># Cài đặt một gem
+$ gem install rails
+
+# Cài đặt phiên bản cụ thể của gem
+$ gem install rails -v 6.1.4
+
+# Kiểm tra danh sách các gem đã cài đặt
+$ gem list
+
+# Tìm kiếm gem trên RubyGems.org
+$ gem search ^rails
+
+# Xem thông tin chi tiết về gem
+$ gem info rails
+
+# Gỡ bỏ một gem
+$ gem uninstall rails
+
+# Cập nhật tất cả các gem
+$ gem update</code></pre>
+
+            <div class="note">
+                <h4>Lưu ý:</h4>
+                <p>Khi cài đặt gem, bạn có thể cần quyền quản trị (sudo) trên một số hệ thống. Nên sử dụng công cụ quản lý phiên bản Ruby như RVM hoặc rbenv để tránh vấn đề này.</p>
+            </div>
+
+            <h3>2. Bundler và Gemfile</h3>
+            <p>Bundler là công cụ quản lý các gem phụ thuộc cho dự án Ruby, giúp đảm bảo rằng mọi người làm việc trên cùng một dự án đều sử dụng cùng một phiên bản gem. Bundler giải quyết vấn đề "dependency hell" khi làm việc với nhiều gem khác nhau.</p>
+
+            <h4>Sử dụng Bundler:</h4>
+            <pre><code class="language-ruby"># Cài đặt Bundler
+$ gem install bundler
+
+# Tạo một Gemfile
+$ bundle init</code></pre>
+
+            <h4>Cấu trúc của Gemfile:</h4>
+            <pre><code class="language-ruby"># Gemfile
+source 'https://rubygems.org'
+
+# Chỉ định phiên bản Ruby
+ruby '3.0.0'
+
+# Gem với phiên bản cụ thể
+gem 'rails', '6.1.4'
+
+# Gem với phiên bản linh hoạt (>= 1.1.0, < 1.2.0)
+gem 'pg', '~> 1.1'
+
+# Gem từ repository Git
+gem 'nokogiri', git: 'https://github.com/sparklemotion/nokogiri'
+
+# Gem chỉ dùng trong môi trường phát triển
+group :development do
+  gem 'byebug'
+  gem 'pry'
+end
+
+# Gem chỉ dùng trong môi trường kiểm thử
+group :test do
+  gem 'rspec'
+  gem 'capybara'
+end
+
+# Gem dùng trong cả môi trường phát triển và kiểm thử
+group :development, :test do
+  gem 'dotenv-rails'
+end</code></pre>
+
+            <h4>Quản lý gem với Bundler:</h4>
+            <pre><code class="language-ruby"># Cài đặt tất cả gem từ Gemfile
+$ bundle install
+
+# Cài đặt gem vào thư mục cụ thể
+$ bundle install --path vendor/bundle
+
+# Cập nhật tất cả gem trong Gemfile
+$ bundle update
+
+# Cập nhật một gem cụ thể
+$ bundle update rails
+
+# Chạy lệnh với môi trường Bundler
+$ bundle exec rspec
+
+# Kiểm tra phiên bản gem đang sử dụng
+$ bundle list
+
+# Tạo Gemfile.lock từ Gemfile
+$ bundle lock</code></pre>
+
+            <div class="note">
+                <h4>Gemfile.lock:</h4>
+                <p>Bundler tạo ra file Gemfile.lock để lưu trữ chính xác phiên bản của tất cả gem đã cài đặt. File này nên được commit vào hệ thống quản lý phiên bản (Git) để đảm bảo tất cả thành viên trong nhóm sử dụng cùng phiên bản gem.</p>
+            </div>
+
+            <h3>3. Tạo Gem đơn giản</h3>
+            <p>Tạo một gem đơn giản để chia sẻ mã nguồn Ruby của bạn với cộng đồng. Quá trình này bao gồm việc tạo cấu trúc thư mục, viết mã nguồn, cấu hình thông tin gem và đóng gói gem.</p>
+
+            <h4>Bước 1: Tạo cấu trúc thư mục cho gem</h4>
+            <pre><code class="language-ruby"># Sử dụng Bundler để tạo cấu trúc gem
+$ bundle gem my_calculator</code></pre>
+
+            <p>Lệnh này sẽ tạo ra cấu trúc thư mục như sau:</p>
+            <pre><code>my_calculator/
+├── .git/
+├── .gitignore
+├── Gemfile
+├── LICENSE.txt
+├── README.md
+├── Rakefile
+├── bin/
+│   ├── console
+│   └── setup
+├── lib/
+│   ├── my_calculator.rb
+│   └── my_calculator/
+│       └── version.rb
+├── my_calculator.gemspec
+└── spec/
+    ├── my_calculator_spec.rb
+    └── spec_helper.rb</code></pre>
+
+            <h4>Bước 2: Chỉnh sửa thông tin gem trong file .gemspec</h4>
+            <pre><code class="language-ruby"># my_calculator.gemspec
+require_relative 'lib/my_calculator/version'
+
+Gem::Specification.new do |spec|
+  spec.name          = "my_calculator"
+  spec.version       = MyCalculator::VERSION
+  spec.authors       = ["Tên của bạn"]
+  spec.email         = ["email@example.com"]
+
+  spec.summary       = "Một gem tính toán đơn giản"
+  spec.description   = "Gem này cung cấp các phương thức tính toán cơ bản như cộng, trừ, nhân, chia"
+  spec.homepage      = "https://github.com/username/my_calculator"
+  spec.license       = "MIT"
+  spec.required_ruby_version = Gem::Requirement.new(">= 2.5.0")
+
+  # Chỉ định các file sẽ được đóng gói vào gem
+  spec.files = Dir.chdir(File.expand_path('..', __FILE__)) do
+    `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|spec|features)/}) }
+  end
+
+  spec.bindir        = "exe"
+  spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
+  spec.require_paths = ["lib"]
+
+  # Các gem phụ thuộc khi phát triển
+  spec.add_development_dependency "bundler", "~> 2.0"
+  spec.add_development_dependency "rake", "~> 13.0"
+  spec.add_development_dependency "rspec", "~> 3.0"
+
+  # Các gem phụ thuộc khi chạy
+  # spec.add_dependency "activesupport", "~> 6.0"
+end</code></pre>
+
+            <h4>Bước 3: Viết mã nguồn cho gem</h4>
+            <p>Chỉnh sửa file lib/my_calculator.rb:</p>
+            <pre><code class="language-ruby"># lib/my_calculator.rb
+require_relative "my_calculator/version"
+
+module MyCalculator
+  class Error < StandardError; end
+
+  class Calculator
+    def add(a, b)
+      a + b
+    end
+
+    def subtract(a, b)
+      a - b
+    end
+
+    def multiply(a, b)
+      a * b
+    end
+
+    def divide(a, b)
+      raise Error, "Không thể chia cho 0" if b.zero?
+      a / b.to_f
+    end
+  end
+end</code></pre>
+
+            <p>Chỉnh sửa file lib/my_calculator/version.rb:</p>
+            <pre><code class="language-ruby"># lib/my_calculator/version.rb
+module MyCalculator
+  VERSION = "0.1.0"
+end</code></pre>
+
+            <h4>Bước 4: Viết test cho gem (tùy chọn nhưng khuyến khích)</h4>
+            <pre><code class="language-ruby"># spec/my_calculator_spec.rb
+RSpec.describe MyCalculator do
+  it "has a version number" do
+    expect(MyCalculator::VERSION).not_to be nil
+  end
+
+  describe MyCalculator::Calculator do
+    let(:calculator) { MyCalculator::Calculator.new }
+
+    it "adds two numbers" do
+      expect(calculator.add(2, 3)).to eq(5)
+    end
+
+    it "subtracts two numbers" do
+      expect(calculator.subtract(5, 2)).to eq(3)
+    end
+
+    it "multiplies two numbers" do
+      expect(calculator.multiply(2, 3)).to eq(6)
+    end
+
+    it "divides two numbers" do
+      expect(calculator.divide(6, 2)).to eq(3.0)
+    end
+
+    it "raises error when dividing by zero" do
+      expect { calculator.divide(6, 0) }.to raise_error(MyCalculator::Error)
+    end
+  end
+end</code></pre>
+
+            <h4>Bước 5: Chạy test (nếu có)</h4>
+            <pre><code class="language-ruby"># Cài đặt các gem phụ thuộc
+$ bundle install
+
+# Chạy test
+$ bundle exec rspec</code></pre>
+
+            <h4>Bước 6: Đóng gói và cài đặt gem cục bộ</h4>
+            <pre><code class="language-ruby"># Đóng gói gem
+$ gem build my_calculator.gemspec
+
+# Cài đặt gem cục bộ
+$ gem install ./my_calculator-0.1.0.gem</code></pre>
+
+            <h4>Bước 7: Sử dụng gem</h4>
+            <pre><code class="language-ruby"># Tạo file test.rb
+require 'my_calculator'
+
+calc = MyCalculator::Calculator.new
+puts calc.add(5, 3)      # => 8
+puts calc.subtract(5, 3) # => 2
+puts calc.multiply(5, 3) # => 15
+puts calc.divide(6, 2)   # => 3.0</code></pre>
+
+            <h3>4. Thực hành: Tạo và xuất bản gem đơn giản</h3>
+
+            <div class="exercise">
+                <h4>Bài tập: Tạo và xuất bản gem đơn giản</h4>
+                <p>Trong bài tập này, chúng ta sẽ tạo một gem đơn giản có tên là "string_utils" để cung cấp các phương thức xử lý chuỗi và xuất bản nó lên RubyGems.org.</p>
+
+                <h5>Bước 1: Tạo cấu trúc gem</h5>
+                <pre><code class="language-ruby"># Tạo cấu trúc gem
+$ bundle gem string_utils</code></pre>
+
+                <h5>Bước 2: Chỉnh sửa thông tin gem</h5>
+                <pre><code class="language-ruby"># string_utils.gemspec
+require_relative 'lib/string_utils/version'
+
+Gem::Specification.new do |spec|
+  spec.name          = "string_utils"
+  spec.version       = StringUtils::VERSION
+  spec.authors       = ["Tên của bạn"]
+  spec.email         = ["email@example.com"]
+
+  spec.summary       = "Các tiện ích xử lý chuỗi"
+  spec.description   = "Gem cung cấp các phương thức hữu ích để xử lý chuỗi trong Ruby"
+  spec.homepage      = "https://github.com/username/string_utils"
+  spec.license       = "MIT"
+  spec.required_ruby_version = Gem::Requirement.new(">= 2.5.0")
+
+  spec.files = Dir.chdir(File.expand_path('..', __FILE__)) do
+    `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|spec|features)/}) }
+  end
+
+  spec.bindir        = "exe"
+  spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
+  spec.require_paths = ["lib"]
+end</code></pre>
+
+                <h5>Bước 3: Viết mã nguồn</h5>
+                <pre><code class="language-ruby"># lib/string_utils.rb
+require_relative "string_utils/version"
+
+module StringUtils
+  class Error < StandardError; end
+
+  # Chuyển đổi chuỗi thành dạng snake_case
+  def self.to_snake_case(str)
+    str.gsub(/::/, '/')
+       .gsub(/([A-Z]+)([A-Z][a-z])/, '\1_\2')
+       .gsub(/([a-z\d])([A-Z])/, '\1_\2')
+       .tr("-", "_")
+       .downcase
+  end
+
+  # Chuyển đổi chuỗi thành dạng camelCase
+  def self.to_camel_case(str)
+    str.split('_').collect.with_index { |word, i|
+      i == 0 ? word : word.capitalize
+    }.join
+  end
+
+  # Đảo ngược chuỗi
+  def self.reverse(str)
+    str.reverse
+  end
+
+  # Đếm số từ trong chuỗi
+  def self.word_count(str)
+    str.split(/\s+/).length
+  end
+end</code></pre>
+
+                <h5>Bước 4: Đóng gói gem</h5>
+                <pre><code class="language-ruby"># Đóng gói gem
+$ gem build string_utils.gemspec</code></pre>
+
+                <h5>Bước 5: Đăng ký tài khoản và xuất bản gem</h5>
+                <pre><code class="language-ruby"># Đăng ký tài khoản trên RubyGems.org
+# Truy cập https://rubygems.org/sign_up
+
+# Tạo API key từ tài khoản của bạn
+# Truy cập https://rubygems.org/profile/api_keys
+
+# Lưu API key vào ~/.gem/credentials
+$ curl -u username https://rubygems.org/api/v1/api_key.yaml > ~/.gem/credentials
+$ chmod 0600 ~/.gem/credentials
+
+# Xuất bản gem
+$ gem push string_utils-0.1.0.gem
+
+# Kiểm tra gem đã xuất bản
+$ gem search string_utils --remote</code></pre>
+
+                <h5>Bước 6: Sử dụng gem đã xuất bản</h5>
+                <pre><code class="language-ruby"># Cài đặt gem
+$ gem install string_utils
+
+# Sử dụng gem
+require 'string_utils'
+
+puts StringUtils.to_snake_case("HelloWorld")  # => "hello_world"
+puts StringUtils.to_camel_case("hello_world") # => "helloWorld"
+puts StringUtils.reverse("Ruby")              # => "ybuR"
+puts StringUtils.word_count("Hello Ruby World") # => 3</code></pre>
+            </div>
+
+            <div class="note">
+                <h4>Lưu ý khi xuất bản gem:</h4>
+                <p>1. Tên gem phải là duy nhất trên RubyGems.org</p>
+                <p>2. Đảm bảo gem của bạn có tài liệu hướng dẫn rõ ràng</p>
+                <p>3. Tuân thủ các quy ước đặt tên và cấu trúc của Ruby</p>
+                <p>4. Kiểm tra kỹ lưỡng gem trước khi xuất bản</p>
+                <p>5. Cập nhật phiên bản gem theo quy tắc Semantic Versioning (MAJOR.MINOR.PATCH)</p>
+            </div>
+        </section>
+    </main>
+    <footer>
+        <div class="lesson-navigation" style="padding: 20px;">
+            <a href="3-tich-hop-voi-co-so-du-lieu.html" class="prev">Back</a>
+        </div>
+    </footer>
+</body>
+</html>

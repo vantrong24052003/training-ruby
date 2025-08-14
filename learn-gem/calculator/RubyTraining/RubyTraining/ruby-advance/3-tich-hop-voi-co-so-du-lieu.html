@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tích hợp với cơ sở dữ liệu trong Ruby</title>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.25.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.25.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.25.0/components/prism-ruby.min.js"></script>
+</head>
+<body>
+    <header>
+        <h1 style="text-align: center; color: #fff;">Ruby Advance</h1>
+    </header>
+    <div class="navigation" style="text-align: center; font-size: 20px;">
+      <a href="../index.html" class="home">Home</a>
+    </div>
+    <main>
+        <section class="lesson-content">
+            <h2>3. Tích hợp với cơ sở dữ liệu (Database Integration)</h2>
+
+            <h3>1. Kết nối với cơ sở dữ liệu</h3>
+            <p>Ruby cung cấp nhiều thư viện để kết nối và làm việc với cơ sở dữ liệu, trong đó phổ biến nhất là ActiveRecord, một phần của Ruby on Rails. Ngoài ra, bạn cũng có thể sử dụng các thư viện như `pg` cho PostgreSQL hoặc `sqlite3` cho SQLite.</p>
+
+            <h4>Ví dụ kết nối cơ sở dữ liệu với ActiveRecord:</h4>
+            <pre><code class="language-ruby">require 'active_record'
+
+# Cấu hình kết nối đến cơ sở dữ liệu
+ActiveRecord::Base.establish_connection(
+  adapter: 'sqlite3',
+  database: 'db/development.sqlite3'
+)
+
+# Định nghĩa một model đơn giản
+class User < ActiveRecord::Base
+end
+
+# Tạo bảng users
+ActiveRecord::Schema.define do
+  create_table :users do |t|
+    t.string :name
+    t.string :email
+    t.integer :age
+  end
+end
+
+# Tạo một người dùng mới
+user = User.create(name: "Nguyễn Văn A", email: "a@example.com", age: 25)
+puts "Đã tạo người dùng: #{user.name}, #{user.email}, #{user.age} tuổi"</code></pre>
+
+            <h4>Làm việc với SQLite3:</h4>
+            <pre><code class="language-ruby">require 'sqlite3'
+
+# Tạo một database SQLite mới
+db = SQLite3::Database.new "test.db"
+
+# Tạo bảng
+rows = db.execute <<-SQL
+  CREATE TABLE IF NOT EXISTS products (
+    id INTEGER PRIMARY KEY,
+    name TEXT,
+    price REAL
+  );
+SQL
+
+# Thêm dữ liệu vào bảng
+stmt = db.prepare "INSERT INTO products (name, price) VALUES (?, ?)"
+stmt.execute("Laptop", 15000000)
+stmt.execute("Điện thoại", 10000000)
+
+# Truy vấn dữ liệu
+db.execute( "SELECT * FROM products" ) do |row|
+  puts row.join(", ")
+end
+
+# Đóng kết nối
+db.close</code></pre>
+
+            <h3>Thực hành</h3>
+
+            <div class="exercise">
+                <h4>Bài tập: Quản lý sản phẩm với SQLite3</h4>
+                <p>Xây dựng một ứng dụng quản lý sản phẩm với các chức năng: thêm, xóa, sửa, và hiển thị sản phẩm. Dữ liệu được lưu trong database SQLite.</p>
+
+                <pre><code class="language-ruby">require 'sqlite3'
+
+class QuanLySanPham
+  DB_NAME = "san_pham.db"
+
+  def initialize
+    @db = SQLite3::Database.new DB_NAME
+    create_table
+  end
+
+  def create_table
+    @db.execute <<-SQL
+      CREATE TABLE IF NOT EXISTS san_pham (
+        id INTEGER PRIMARY KEY,
+        ten TEXT,
+        gia INTEGER
+      );
+    SQL
+  end
+
+  def them_san_pham(ten, gia)
+    @db.execute "INSERT INTO products (name, price) VALUES (?, ?)", [ten, gia]
+    puts "Đã thêm sản phẩm: #{ten} với giá #{gia} VND"
+  end
+
+  def hien_thi_san_pham
+    puts "\n=== DANH SÁCH SẢN PHẨM ==="
+    @db.execute( "SELECT * FROM products" ) do |row|
+      puts "#{row[0]}. #{row[1]} - #{row[2]} VND"
+    end
+  end
+
+  def sua_san_pham(id, ten, gia)
+    @db.execute "UPDATE products SET name = ?, price = ? WHERE id = ?", [ten, gia, id]
+    puts "Đã cập nhật sản phẩm ID #{id} thành: #{ten} với giá #{gia} VND"
+  end
+
+  def xoa_san_pham(id)
+    @db.execute "DELETE FROM products WHERE id = ?", [id]
+    puts "Đã xóa sản phẩm ID #{id}"
+  end
+
+  def menu
+    loop do
+      puts "\n=== QUẢN LÝ SẢN PHẨM ==="
+      puts "1. Hiển thị sản phẩm"
+      puts "2. Thêm sản phẩm"
+      puts "3. Sửa sản phẩm"
+      puts "4. Xóa sản phẩm"
+      puts "0. Thoát"
+
+      print "Chọn chức năng: "
+      choice = gets.chomp.to_i
+
+      case choice
+      when 1
+        hien_thi_san_pham
+      when 2
+        print "Nhập tên sản phẩm: "
+        ten = gets.chomp
+        print "Nhập giá sản phẩm: "
+        gia = gets.chomp.to_i
+        them_san_pham(ten, gia)
+      when 3
+        print "Nhập ID sản phẩm cần sửa: "
+        id = gets.chomp.to_i
+        print "Nhập tên sản phẩm mới: "
+        ten = gets.chomp
+        print "Nhập giá sản phẩm mới: "
+        gia = gets.chomp.to_i
+        sua_san_pham(id, ten, gia)
+      when 4
+        print "Nhập ID sản phẩm cần xóa: "
+        id = gets.chomp.to_i
+        xoa_san_pham(id)
+      when 0
+        puts "Tạm biệt!"
+        break
+      else
+        puts "Lựa chọn không hợp lệ!"
+      end
+    end
+  end
+end
+
+# Chạy ứng dụng
+ql_san_pham = QuanLySanPham.new
+ql_san_pham.menu</code></pre>
+            </div>
+        </section>
+    </main>
+    <footer>
+        <div class="lesson-navigation" style="padding: 20px;">
+            <a href="2-xu-ly-ngoai-le-va-nhap-xuat.html" class="prev">Back</a>
+            <a href="4-gem-va-package-management.html" class="next">Next</a>
+        </div>
+    </footer>
+</body>
+</html>

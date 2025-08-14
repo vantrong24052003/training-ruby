@@ -1,0 +1,281 @@
+/* Styles chung cho trang web đào tạo Ruby */
+
+:root {
+  --primary-color: #701516;  /* Màu đỏ ruby */
+  --secondary-color: #333333;
+  --background-color: #f8f8f8;
+  --text-color: #333333;
+  --link-color: #701516;
+  --border-color: #dddddd;
+  --code-bg-color: #f5f5f5;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Roboto', 'Segoe UI', Arial, sans-serif;
+  line-height: 1.6;
+  color: var(--text-color);
+  background-color: var(--background-color);
+  padding: 20px;
+  margin: 0;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+header {
+  background-color: var(--primary-color);
+  color: white;
+  padding: 20px 0;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  margin-bottom: 30px;
+}
+
+header .container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+nav ul {
+  display: flex;
+  list-style: none;
+}
+
+nav ul li {
+  margin-left: 20px;
+}
+
+nav ul li a {
+  color: white;
+  text-decoration: none;
+  transition: opacity 0.3s;
+}
+
+nav ul li a:hover {
+  opacity: 0.8;
+}
+
+main {
+  padding: 20px;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.lesson-content {
+  padding: 30px;
+  margin-bottom: 20px;
+  background-color: white;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: var(--primary-color);
+  margin-bottom: 20px;
+}
+
+h1 {
+  font-size: 32px;
+  border-bottom: 2px solid var(--primary-color);
+  padding-bottom: 10px;
+}
+
+h2 {
+  font-size: 24px;
+  margin-top: 30px;
+}
+
+h3 {
+  font-size: 20px;
+  margin-top: 25px;
+}
+
+p {
+  line-height: 1.8;
+  margin-bottom: 20px;
+}
+
+a {
+  color: var(--link-color);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+code {
+  font-family: 'Consolas', 'Monaco', monospace;
+  padding: 2px 5px;
+  border-radius: 3px;
+  font-size: 0.9em;
+}
+
+pre {
+  background-color: #323232;
+  padding: 15px;
+  border-radius: 5px;
+  overflow-x: auto;
+  margin-bottom: 20px;
+  border: 1px solid var(--border-color);
+  color: #f8f8f8;
+}
+
+.note {
+  background-color: #f0f7ff;
+  border-left: 4px solid #0066cc;
+  padding: 15px;
+  margin-bottom: 20px;
+  border-radius: 0 5px 5px 0;
+}
+
+.warning {
+  background-color: #fff9f0;
+  border-left: 4px solid #ff9900;
+  padding: 15px;
+  margin-bottom: 20px;
+  border-radius: 0 5px 5px 0;
+}
+
+footer {
+  background-color: var(--secondary-color);
+  color: white;
+  padding: 10px 0;
+  text-align: center;
+  margin-top: 30px;
+}
+
+.breadcrumb {
+  margin-bottom: 20px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.breadcrumb a {
+  color: var(--primary-color);
+}
+
+.lesson-navigation {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 40px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border-color);
+}
+
+.lesson-navigation a {
+  display: inline-block;
+  padding: 10px 15px;
+  background-color: var(--primary-color);
+  color: white;
+  border-radius: 5px;
+  text-decoration: none;
+  transition: background-color 0.3s;
+}
+
+.lesson-navigation a:hover {
+  background-color: #5a1112;
+  text-decoration: none;
+}
+
+.lesson-navigation .prev {
+  margin-right: auto;
+}
+
+.lesson-navigation .next {
+  margin-left: auto;
+}
+
+@media (max-width: 768px) {
+  header .container {
+    flex-direction: column;
+  }
+
+  nav ul {
+    margin-top: 15px;
+  }
+
+  nav ul li {
+    margin-left: 10px;
+    margin-right: 10px;
+  }
+}
+
+/* Đảm bảo chữ xuống hàng nếu quá dài */
+body, p, h1, h2, h3, h4, h5, h6 {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+/* Đảm bảo khoảng cách giữa các phần tử */
+section {
+  margin-bottom: 30px;
+}
+
+/* Cải thiện khả năng đọc của văn bản */
+p {
+  line-height: 1.8;
+  margin-bottom: 20px;
+}
+
+/* Highlight cho từ khóa và phương thức Ruby */
+.ruby-keyword,
+pre code .keyword {
+  color: #e06c75; /* Màu đỏ đậm cho từ khóa */
+  font-weight: bold;
+}
+
+/* Highlight cho giá trị */
+.ruby-value,
+pre code .value {
+  color: #98c379; /* Màu xanh lá cây đậm cho giá trị */
+}
+
+/* Highlight cho comment */
+.ruby-comment,
+pre code .comment {
+  color: #7f848e; /* Màu xám cho comment */
+  font-style: italic;
+}
+
+/* Highlight cho string */
+.ruby-string,
+pre code .string {
+  color: #e5c07b; /* Màu vàng cho string */
+}
+
+/* Highlight cho số */
+.ruby-number,
+pre code .number {
+  color: #56b6c2; /* Màu xanh dương cho số */
+}
+
+/* Highlight cho method */
+.ruby-method,
+pre code .method {
+  color: #c678dd; /* Màu tím cho method */
+}
+
+/* Highlight cho symbol */
+.ruby-symbol,
+pre code .symbol {
+  color: #61afef; /* Màu xanh dương nhạt cho symbol */
+}
+
+/* Thêm JavaScript để highlight code */
+/* Bạn có thể thêm thẻ script vào file HTML để highlight code tự động */

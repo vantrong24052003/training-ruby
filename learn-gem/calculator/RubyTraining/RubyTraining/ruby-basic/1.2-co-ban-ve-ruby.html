@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cơ bản về Ruby</title>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.25.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.25.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.25.0/components/prism-ruby.min.js"></script>
+</head>
+<body>
+    <header>
+        <h1 style="text-align: center; color: #fff;">Ruby Basic</h1>
+    </header>
+    <div class="navigation" style="text-align: center; font-size: 20px;">
+      <a href="../index.html" class="home">Home</a>
+    </div>
+    <main>
+        <section class="lesson-content">
+            <h2>1.2 Cơ bản về Ruby</h2>
+
+            <h3>Biến và kiểu dữ liệu</h3>
+            <p>Trong Ruby, biến là một tên đại diện cho một giá trị. Ruby là ngôn ngữ có kiểu dữ liệu động, nghĩa là bạn không cần khai báo kiểu dữ liệu khi tạo biến. Kiểu dữ liệu sẽ được xác định dựa trên giá trị được gán.</p>
+
+            <h4>Các loại biến trong Ruby:</h4>
+            <ul>
+                <li><strong>Biến cục bộ</strong>: Bắt đầu bằng chữ cái thường hoặc dấu gạch dưới (_). Ví dụ: <code>name</code>, <code>_count</code></li>
+                <li><strong>Biến toàn cục</strong>: Bắt đầu bằng dấu $. Ví dụ: <code>$global_var</code></li>
+                <li><strong>Biến instance</strong>: Bắt đầu bằng dấu @. Ví dụ: <code>@instance_var</code></li>
+                <li><strong>Biến class</strong>: Bắt đầu bằng @@. Ví dụ: <code>@@class_var</code></li>
+                <li><strong>Hằng số</strong>: Bắt đầu bằng chữ cái in hoa. Ví dụ: <code>PI</code>, <code>MAX_VALUE</code></li>
+            </ul>
+
+            <h4>Các kiểu dữ liệu cơ bản:</h4>
+            <ul>
+                <li><strong>Số nguyên (Integer)</strong>: <code>42</code>, <code>-17</code>, <code>0</code></li>
+                <li><strong>Số thực (Float)</strong>: <code>3.14</code>, <code>-0.001</code>, <code>2.0e-10</code></li>
+                <li><strong>Chuỗi (String)</strong>: <code>"Hello"</code>, <code>'World'</code></li>
+                <li><strong>Boolean</strong>: <code>true</code>, <code>false</code></li>
+                <li><strong>Symbol</strong>: <code>:name</code>, <code>:status</code></li>
+                <li><strong>Nil</strong>: <code>nil</code> (tương đương với null trong các ngôn ngữ khác)</li>
+            </ul>
+
+            <p>Ví dụ về sử dụng biến và kiểu dữ liệu:</p>
+            <pre><code class="language-ruby"># Biến cục bộ với các kiểu dữ liệu khác nhau
+ten = "Ruby"
+tuoi = 25
+chieu_cao = 1.75
+la_sinh_vien = true
+trang_thai = :active
+khong_co_gia_tri = nil
+
+# Kiểm tra kiểu dữ liệu
+puts ten.class      # String
+puts tuoi.class     # Integer
+puts chieu_cao.class # Float
+puts la_sinh_vien.class # TrueClass
+puts trang_thai.class # Symbol
+puts khong_co_gia_tri.class # NilClass</code></pre>
+
+            <h3>Các toán tử và biểu thức điều kiện</h3>
+            <p>Ruby hỗ trợ nhiều loại toán tử để thực hiện các phép tính và so sánh. Biểu thức điều kiện giúp kiểm soát luồng thực thi của chương trình.</p>
+
+            <h4>Toán tử số học:</h4>
+            <ul>
+                <li><code>+</code>: Cộng</li>
+                <li><code>-</code>: Trừ</li>
+                <li><code>*</code>: Nhân</li>
+                <li><code>/</code>: Chia</li>
+                <li><code>%</code>: Chia lấy dư</li>
+                <li><code>**</code>: Lũy thừa</li>
+            </ul>
+
+            <h4>Toán tử so sánh:</h4>
+            <ul>
+                <li><code>==</code>: Bằng</li>
+                <li><code>!=</code>: Khác</li>
+                <li><code>></code>: Lớn hơn</li>
+                <li><code><</code>: Nhỏ hơn</li>
+                <li><code>>=</code>: Lớn hơn hoặc bằng</li>
+                <li><code><=</code>: Nhỏ hơn hoặc bằng</li>
+                <li><code>===</code>: Kiểm tra đối tượng có thuộc về một lớp hay không</li>
+                <li><code>.eql?</code>: Kiểm tra giá trị và kiểu dữ liệu</li>
+                <li><code>.equal?</code>: Kiểm tra ID đối tượng</li>
+            </ul>
+
+            <h4>Toán tử logic:</h4>
+            <ul>
+                <li><code>&&</code> hoặc <code>and</code>: Và</li>
+                <li><code>||</code> hoặc <code>or</code>: Hoặc</li>
+                <li><code>!</code> hoặc <code>not</code>: Phủ định</li>
+            </ul>
+
+            <h4>Cấu trúc điều kiện:</h4>
+            <p>Ruby cung cấp nhiều cách để viết biểu thức điều kiện:</p>
+
+            <p>1. Cấu trúc if-else:</p>
+            <pre><code class="language-ruby">if tuoi > 18
+  puts "Bạn đã đủ tuổi trưởng thành."
+elsif tuoi > 12
+  puts "Bạn là thiếu niên."
+else
+  puts "Bạn còn nhỏ."
+end</code></pre>
+
+            <p>2. Cấu trúc unless (ngược với if):</p>
+            <pre><code class="language-ruby">unless tuoi < 18
+  puts "Bạn đã đủ tuổi trưởng thành."
+else
+  puts "Bạn chưa đủ tuổi trưởng thành."
+end</code></pre>
+
+            <p>3. Toán tử ba ngôi:</p>
+            <pre><code class="language-ruby">message = tuoi >= 18 ? "Đủ tuổi" : "Chưa đủ tuổi"</code></pre>
+
+            <p>4. Cấu trúc case-when:</p>
+            <pre><code class="language-ruby">case tuoi
+when 0..12
+  puts "Trẻ em"
+when 13..17
+  puts "Thiếu niên"
+when 18..64
+  puts "Người trưởng thành"
+else
+  puts "Người cao tuổi"
+end</code></pre>
+
+            <h3>Vòng lặp</h3>
+            <p>Ruby cung cấp nhiều loại vòng lặp để thực hiện các tác vụ lặp đi lặp lại. Mỗi loại vòng lặp có ưu điểm riêng và phù hợp với các tình huống khác nhau.</p>
+
+            <h4>Vòng lặp for:</h4>
+            <p>Vòng lặp for thường được sử dụng khi bạn biết trước số lần lặp:</p>
+            <pre><code class="language-ruby"># Lặp qua một dãy số
+for i in 1..5 do
+  puts "Số: #{i}"
+end
+
+# Lặp qua một mảng
+mang = ["Ruby", "Python", "JavaScript"]
+for ngon_ngu in mang do
+  puts "Ngôn ngữ: #{ngon_ngu}"
+end</code></pre>
+
+            <h4>Vòng lặp while:</h4>
+            <p>Vòng lặp while thực hiện lặp lại một khối lệnh miễn là điều kiện còn đúng:</p>
+            <pre><code class="language-ruby">i = 1
+while i <= 5 do
+  puts "Vòng lặp while: #{i}"
+  i += 1
+end</code></pre>
+
+            <h4>Vòng lặp until:</h4>
+            <p>Vòng lặp until thực hiện lặp lại một khối lệnh cho đến khi điều kiện trở thành đúng:</p>
+            <pre><code class="language-ruby">i = 1
+until i > 5 do
+  puts "Vòng lặp until: #{i}"
+  i += 1
+end</code></pre>
+
+            <h4>Phương thức times:</h4>
+            <p>Phương thức times thực hiện một khối lệnh n lần:</p>
+            <pre><code class="language-ruby">5.times do |i|
+  puts "Lần lặp thứ #{i+1}"
+end</code></pre>
+
+            <h4>Phương thức each:</h4>
+            <p>Phương thức each thường được sử dụng để lặp qua các phần tử của một tập hợp:</p>
+            <pre><code class="language-ruby">mang = ["Ruby", "Python", "JavaScript"]
+mang.each do |ngon_ngu|
+  puts "Ngôn ngữ: #{ngon_ngu}"
+end</code></pre>
+
+            <h3>Mảng và Hash</h3>
+            <p>Mảng và Hash là hai cấu trúc dữ liệu quan trọng trong Ruby, cho phép lưu trữ và truy xuất dữ liệu một cách hiệu quả.</p>
+
+            <h4>Mảng (Array):</h4>
+            <p>Mảng là một tập hợp các phần tử được sắp xếp theo thứ tự. Trong Ruby, mảng có thể chứa các phần tử thuộc nhiều kiểu dữ liệu khác nhau.</p>
+
+            <p>Cách tạo mảng:</p>
+            <pre><code class="language-ruby"># Tạo mảng trống
+mang_rong = []
+
+# Tạo mảng với các phần tử
+mang_so = [1, 2, 3, 4, 5]
+mang_hon_hop = [1, "hai", 3.0, true, :symbol]
+
+# Tạo mảng bằng phương thức new
+mang_moi = Array.new(3, "Ruby") # ["Ruby", "Ruby", "Ruby"]</code></pre>
+
+            <p>Truy cập phần tử trong mảng:</p>
+            <pre><code class="language-ruby">mang = ["Ruby", "Python", "JavaScript", "PHP", "Java"]
+
+# Truy cập theo chỉ số (bắt đầu từ 0)
+puts mang[0]  # Ruby
+puts mang[2]  # JavaScript
+
+# Truy cập bằng chỉ số âm (đếm từ cuối mảng)
+puts mang[-1] # Java
+puts mang[-2] # PHP
+
+# Truy cập một phạm vi
+puts mang[1..3].inspect # ["Python", "JavaScript", "PHP"]</code></pre>
+
+            <p>Các phương thức thường dùng với mảng:</p>
+            <pre><code class="language-ruby">mang = ["Ruby", "Python"]
+
+# Thêm phần tử vào cuối mảng
+mang.push("JavaScript")
+mang << "PHP"  # Cách viết ngắn gọn hơn
+
+# Thêm phần tử vào đầu mảng
+mang.unshift("Java")
+
+# Xóa phần tử cuối cùng
+ngon_ngu = mang.pop
+
+# Xóa phần tử đầu tiên
+ngon_ngu_dau = mang.shift
+
+# Kiểm tra kích thước mảng
+puts mang.length  # hoặc mang.size
+
+# Kiểm tra mảng có rỗng không
+puts mang.empty?
+
+# Kiểm tra phần tử có tồn tại trong mảng không
+puts mang.include?("Ruby")
+
+# Sắp xếp mảng
+mang.sort
+
+# Đảo ngược mảng
+mang.reverse</code></pre>
+
+            <h4>Hash:</h4>
+            <p>Hash là một cấu trúc dữ liệu lưu trữ các cặp key-value. Mỗi key trong hash là duy nhất.</p>
+
+            <p>Cách tạo hash:</p>
+            <pre><code class="language-ruby"># Tạo hash trống
+hash_rong = {}
+
+# Tạo hash với các cặp key-value
+sinh_vien = {
+  "ten" => "Nguyễn Văn A",
+  "tuoi" => 20,
+  "diem" => 8.5
+}
+
+# Sử dụng symbol làm key (cách viết hiện đại)
+sinh_vien = {
+  ten: "Nguyễn Văn A",
+  tuoi: 20,
+  diem: 8.5
+}</code></pre>
+
+            <p>Truy cập giá trị trong hash:</p>
+            <pre><code class="language-ruby">sinh_vien = {
+  ten: "Nguyễn Văn A",
+  tuoi: 20,
+  diem: 8.5
+}
+
+# Truy cập theo key
+puts sinh_vien[:ten]   # Nguyễn Văn A
+puts sinh_vien[:tuoi]  # 20
+
+# Thêm hoặc cập nhật giá trị
+sinh_vien[:lop] = "12A1"
+sinh_vien[:tuoi] = 21
+
+# Xóa một cặp key-value
+sinh_vien.delete(:diem)
+
+# Kiểm tra key có tồn tại không
+puts sinh_vien.has_key?(:ten)  # true
+puts sinh_vien.key?(:diem)     # false
+
+# Lấy tất cả keys hoặc values
+puts sinh_vien.keys.inspect    # [:ten, :tuoi, :lop]
+puts sinh_vien.values.inspect  # ["Nguyễn Văn A", 21, "12A1"]</code></pre>
+
+            <p>Lặp qua hash:</p>
+            <pre><code class="language-ruby">sinh_vien = {
+  ten: "Nguyễn Văn A",
+  tuoi: 20,
+  diem: 8.5
+}
+
+# Lặp qua từng cặp key-value
+sinh_vien.each do |key, value|
+  puts "#{key}: #{value}"
+end
+
+# Lặp qua các keys
+sinh_vien.each_key do |key|
+  puts "Key: #{key}"
+end
+
+# Lặp qua các values
+sinh_vien.each_value do |value|
+  puts "Value: #{value}"
+end</code></pre>
+
+            <h3>Thực hành cơ bản</h3>
+            <p>Dưới đây là một số bài tập thực tế để giúp bạn làm quen với Ruby:</p>
+
+            <h4>Bài 1: Tính tổng các số từ 1 đến n</h4>
+            <pre><code class="language-ruby"># Nhập số n từ người dùng
+print "Nhập số n: "
+n = gets.chomp.to_i
+
+# Cách 1: Sử dụng vòng lặp
+tong = 0
+(1..n).each do |i|
+  tong += i
+end
+puts "Tổng từ 1 đến #{n} (cách 1): #{tong}"
+
+# Cách 2: Sử dụng công thức toán học
+tong = n * (n + 1) / 2
+puts "Tổng từ 1 đến #{n} (cách 2): #{tong}"</code></pre>
+
+            <h4>Bài 2: Kiểm tra số nguyên tố</h4>
+            <pre><code class="language-ruby">def so_nguyen_to?(n)
+  # Số nguyên tố là số tự nhiên lớn hơn 1 và chỉ có hai ước số là 1 và chính nó
+  return false if n <= 1
+
+  # Kiểm tra từ 2 đến căn bậc hai của n
+  (2..Math.sqrt(n).to_i).each do |i|
+    return false if n % i == 0
+  end
+
+  return true
+end
+
+# Kiểm tra một số
+print "Nhập số cần kiểm tra: "
+so = gets.chomp.to_i
+if so_nguyen_to?(so)
+  puts "#{so} là số nguyên tố"
+else
+  puts "#{so} không phải là số nguyên tố"
+end
+
+# In ra các số nguyên tố từ 1 đến 20
+puts "Các số nguyên tố từ 1 đến 20:"
+(1..20).each do |i|
+  print "#{i} " if so_nguyen_to?(i)
+end</code></pre>
+
+            <h4>Bài 3: Quản lý danh sách sinh viên</h4>
+            <pre><code class="language-ruby"># Tạo một mảng chứa thông tin sinh viên
+sinh_vien = [
+  { ma_sv: "SV001", ten: "Nguyễn Văn A", tuoi: 20, diem: 8.5 },
+  { ma_sv: "SV002", ten: "Trần Thị B", tuoi: 21, diem: 9.0 },
+  { ma_sv: "SV003", ten: "Lê Văn C", tuoi: 19, diem: 7.5 }
+]
+
+# Hiển thị danh sách sinh viên
+puts "DANH SÁCH SINH VIÊN:"
+puts "%-10s %-20s %-10s %-10s" % ["Mã SV", "Họ tên", "Tuổi", "Điểm"]
+puts "-" * 50
+
+sinh_vien.each do |sv|
+  puts "%-10s %-20s %-10d %-10.1f" % [sv[:ma_sv], sv[:ten], sv[:tuoi], sv[:diem]]
+end
+
+# Tìm sinh viên có điểm cao nhất
+sv_diem_cao = sinh_vien.max_by { |sv| sv[:diem] }
+puts "\nSinh viên có điểm cao nhất:"
+puts "#{sv_diem_cao[:ten]} - Điểm: #{sv_diem_cao[:diem]}"
+
+# Tính điểm trung bình của lớp
+diem_tb = sinh_vien.sum { |sv| sv[:diem] } / sinh_vien.length
+puts "\nĐiểm trung bình của lớp: #{diem_tb.round(2)}"</code></pre>
+        </section>
+    </main>
+    <footer>
+        <div class="lesson-navigation" style="padding: 20px;">
+            <a href="1.1-gioi-thieu-ve-ruby.html" class="prev">Back</a>
+            <a href="1.2.2-blocks-procs-lambdas.html" class="next">Next</a>
+        </div>
+    </footer>
+</body>
+</html>

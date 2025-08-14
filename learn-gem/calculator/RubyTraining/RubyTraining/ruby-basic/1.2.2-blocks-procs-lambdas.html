@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blocks, Procs và Lambdas trong Ruby</title>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.25.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.25.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.25.0/components/prism-ruby.min.js"></script>
+</head>
+<body>
+    <header>
+        <h1 style="text-align: center; color: #fff;">Ruby Basic</h1>
+    </header>
+    <div class="navigation" style="text-align: center; font-size: 20px;">
+      <a href="../index.html" class="home">Home</a>
+    </div>
+    <main>
+        <section class="lesson-content">
+            <h2>1.2.2 Blocks, Procs và Lambdas</h2>
+
+            <h3>Blocks (Khối lệnh)</h3>
+            <p>Blocks là một trong những tính năng mạnh mẽ nhất của Ruby, cho phép bạn nhóm các lệnh lại với nhau và truyền chúng vào các phương thức. Blocks không phải là đối tượng, mà là một phần của cú pháp của Ruby.</p>
+
+            <h4>Cú pháp của Blocks:</h4>
+            <p>Có hai cách để định nghĩa blocks:</p>
+            <ul>
+                <li>Sử dụng <code>do...end</code> (thường dùng cho blocks nhiều dòng)</li>
+                <li>Sử dụng <code>{ }</code> (thường dùng cho blocks một dòng)</li>
+            </ul>
+
+            <p>Ví dụ về blocks:</p>
+            <pre><code class="language-ruby"># Block với do...end
+[1, 2, 3].each do |so|
+  puts "Số: #{so}"
+end
+
+# Block với { }
+[1, 2, 3].each { |so| puts "Số: #{so}" }
+
+# Block với nhiều tham số
+hash = { ten: "Ruby", nam: 1995 }
+hash.each { |key, value| puts "#{key}: #{value}" }</code></pre>
+
+            <h4>Truyền blocks vào phương thức:</h4>
+            <p>Trong Ruby, bạn có thể truyền một block vào bất kỳ phương thức nào. Phương thức có thể gọi block bằng từ khóa <code>yield</code>.</p>
+
+            <pre><code class="language-ruby"># Định nghĩa phương thức nhận block
+def thuc_hien_hanh_dong
+  puts "Bắt đầu hành động"
+  yield if block_given?  # Kiểm tra xem có block được truyền vào không
+  puts "Kết thúc hành động"
+end
+
+# Gọi phương thức với block
+thuc_hien_hanh_dong do
+  puts "Đang thực hiện hành động..."
+end
+
+# Kết quả:
+# Bắt đầu hành động
+# Đang thực hiện hành động...
+# Kết thúc hành động</code></pre>
+
+            <h3>Procs (Procedures)</h3>
+            <p>Procs là đối tượng hóa của blocks. Chúng cho phép bạn lưu trữ blocks trong biến, truyền chúng giữa các phương thức, và gọi chúng khi cần.</p>
+
+            <h4>Cách tạo Proc:</h4>
+            <pre><code class="language-ruby"># Tạo Proc từ block
+chao_hoi = Proc.new { |ten| puts "Xin chào, #{ten}!" }
+
+# Gọi Proc với phương thức call
+chao_hoi.call("Ruby")  # Xin chào, Ruby!
+
+# Cách gọi khác
+chao_hoi.("Python")    # Xin chào, Python!
+chao_hoi["JavaScript"] # Xin chào, JavaScript!
+chao_hoi === "PHP"     # Xin chào, PHP!</code></pre>
+
+            <h4>Truyền Proc vào phương thức:</h4>
+            <pre><code class="language-ruby"># Định nghĩa phương thức nhận Proc
+def thuc_hien_proc(proc_object)
+  puts "Trước khi gọi proc"
+  proc_object.call
+  puts "Sau khi gọi proc"
+end
+
+# Tạo Proc và truyền vào phương thức
+hanh_dong = Proc.new { puts "Đang thực hiện proc..." }
+thuc_hien_proc(hanh_dong)
+
+# Kết quả:
+# Trước khi gọi proc
+# Đang thực hiện proc...
+# Sau khi gọi proc</code></pre>
+
+            <h3>Lambdas</h3>
+            <p>Lambdas là một loại đặc biệt của Proc. Chúng tương tự như Proc nhưng có một số khác biệt quan trọng về cách xử lý tham số và lệnh return.</p>
+
+            <h4>Cách tạo Lambda:</h4>
+            <pre><code class="language-ruby"># Tạo lambda với cú pháp lambda
+chao_hoi = lambda { |ten| puts "Xin chào, #{ten}!" }
+
+# Tạo lambda với cú pháp -> (stabby lambda)
+chao_hoi = ->(ten) { puts "Xin chào, #{ten}!" }
+
+# Gọi lambda
+chao_hoi.call("Ruby")  # Xin chào, Ruby!</code></pre>
+
+            <h4>Sự khác biệt giữa Proc và Lambda:</h4>
+            <ol>
+                <li><strong>Kiểm tra tham số:</strong> Lambda kiểm tra số lượng tham số nghiêm ngặt, trong khi Proc linh hoạt hơn.</li>
+                <li><strong>Lệnh return:</strong> Trong lambda, return chỉ thoát khỏi lambda. Trong proc, return sẽ thoát khỏi cả phương thức chứa proc.</li>
+            </ol>
+
+            <pre><code class="language-ruby"># Kiểm tra tham số
+proc_test = Proc.new { |a, b| puts "a: #{a}, b: #{b}" }
+proc_test.call(1)  # a: 1, b:
+
+lambda_test = ->(a, b) { puts "a: #{a}, b: #{b}" }
+# lambda_test.call(1)  # ArgumentError: wrong number of arguments
+
+# Lệnh return
+def test_proc
+  puts "Bắt đầu phương thức"
+  my_proc = Proc.new { return "Kết thúc từ proc" }
+  my_proc.call
+  puts "Phương thức vẫn tiếp tục"  # Dòng này không được thực thi
+end
+
+def test_lambda
+  puts "Bắt đầu phương thức"
+  my_lambda = -> { return "Kết thúc từ lambda" }
+  result = my_lambda.call
+  puts "Phương thức vẫn tiếp tục với kết quả: #{result}"
+end
+
+puts test_proc    # Bắt đầu phương thức
+                  # Kết thúc từ proc
+
+puts test_lambda  # Bắt đầu phương thức
+                  # Phương thức vẫn tiếp tục với kết quả: Kết thúc từ lambda</code></pre>
+
+            <h3>Thực hành</h3>
+
+            <h4>Bài 1: Sử dụng block để tính tổng các phần tử trong mảng</h4>
+            <pre><code class="language-ruby">def tinh_tong(mang)
+  tong = 0
+  mang.each { |phan_tu| tong += yield(phan_tu) }
+  tong
+end
+
+# Tính tổng các số
+ket_qua = tinh_tong([1, 2, 3, 4, 5]) { |so| so }
+puts "Tổng các số: #{ket_qua}"  # 15
+
+# Tính tổng bình phương các số
+ket_qua = tinh_tong([1, 2, 3, 4, 5]) { |so| so * so }
+puts "Tổng bình phương: #{ket_qua}"  # 55</code></pre>
+
+            <h4>Bài 2: Tạo bộ lọc với Proc</h4>
+            <pre><code class="language-ruby">def loc_mang(mang, proc_filter)
+  ket_qua = []
+  mang.each do |phan_tu|
+    ket_qua << phan_tu if proc_filter.call(phan_tu)
+  end
+  ket_qua
+end
+
+so = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+
+# Lọc số chẵn
+so_chan = Proc.new { |so| so % 2 == 0 }
+puts "Số chẵn: #{loc_mang(so, so_chan)}"  # [2, 4, 6, 8, 10]
+
+# Lọc số lẻ
+so_le = Proc.new { |so| so % 2 != 0 }
+puts "Số lẻ: #{loc_mang(so, so_le)}"  # [1, 3, 5, 7, 9]
+
+# Lọc số nguyên tố
+so_nguyen_to = Proc.new do |so|
+  next false if so <= 1
+  (2..Math.sqrt(so).to_i).none? { |i| so % i == 0 }
+end
+puts "Số nguyên tố: #{loc_mang(so, so_nguyen_to)}"  # [2, 3, 5, 7]</code></pre>
+
+            <h4>Bài 3: Sử dụng Lambda để tạo các hàm toán học</h4>
+            <pre><code class="language-ruby"># Tạo các hàm toán học
+binh_phuong = ->(x) { x * x }
+can_bac_hai = ->(x) { Math.sqrt(x) }
+nhan_doi = ->(x) { x * 2 }
+
+# Tạo hàm kết hợp các hàm
+def ket_hop_ham(x, *ham)
+  ket_qua = x
+  ham.each { |f| ket_qua = f.call(ket_qua) }
+  ket_qua
+end
+
+# Sử dụng hàm kết hợp
+puts ket_hop_ham(5, binh_phuong)  # 25
+puts ket_hop_ham(5, binh_phuong, can_bac_hai)  # 5.0
+puts ket_hop_ham(5, nhan_doi, binh_phuong)  # 100
+puts ket_hop_ham(5, binh_phuong, nhan_doi, can_bac_hai)  # 10.0</code></pre>
+        </section>
+    </main>
+    <footer>
+        <div class="lesson-navigation" style="padding: 20px;">
+            <a href="1.2-co-ban-ve-ruby.html" class="prev">Back</a>
+            <a href="1.3-lap-trinh-huong-doi-tuong.html" class="next">Next</a>
+        </div>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OOP Nâng cao trong Ruby</title>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.25.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.25.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.25.0/components/prism-ruby.min.js"></script>
+</head>
+<body>
+    <header>
+      <h1 style="text-align: center; color: #fff;">Ruby Advance</h1>
+    </header>
+    <div class="navigation" style="text-align: center; font-size: 20px;">
+      <a href="../index.html" class="home">Home</a>
+    </div>
+    <main>
+        <section class="lesson-content">
+            <h2>1. OOP Nâng cao</h2>
+
+            <h3>Tính đa hình (Polymorphism)</h3>
+            <p>Tính đa hình là một trong những nguyên tắc cơ bản của lập trình hướng đối tượng, cho phép các đối tượng khác nhau phản ứng khác nhau với cùng một thông điệp. Trong Ruby, tính đa hình được thể hiện qua việc các lớp khác nhau có thể định nghĩa các phương thức cùng tên nhưng có hành vi khác nhau.</p>
+
+            <h4>Ví dụ về tính đa hình:</h4>
+            <pre><code class="language-ruby">class HinhHoc
+  def dien_tich
+    raise NotImplementedError, "Lớp con phải định nghĩa phương thức này"
+  end
+
+  def thong_tin
+    "Diện tích: #{dien_tich}"
+  end
+end
+
+class HinhVuong < HinhHoc
+  attr_reader :canh
+
+  def initialize(canh)
+    @canh = canh
+  end
+
+  def dien_tich
+    @canh * @canh
+  end
+
+  def thong_tin
+    "Hình vuông - Cạnh: #{@canh}, #{super}"
+  end
+end
+
+class HinhTron < HinhHoc
+  attr_reader :ban_kinh
+
+  def initialize(ban_kinh)
+    @ban_kinh = ban_kinh
+  end
+
+  def dien_tich
+    Math::PI * @ban_kinh * @ban_kinh
+  end
+
+  def thong_tin
+    "Hình tròn - Bán kính: #{@ban_kinh}, #{super}"
+  end
+end
+
+# Sử dụng tính đa hình
+def in_thong_tin(hinh)
+  puts hinh.thong_tin
+end
+
+hinh_vuong = HinhVuong.new(5)
+hinh_tron = HinhTron.new(3)
+
+in_thong_tin(hinh_vuong)  # Hình vuông - Cạnh: 5, Diện tích: 25
+in_thong_tin(hinh_tron)   # Hình tròn - Bán kính: 3, Diện tích: 28.274333882308138</code></pre>
+
+            <p>Trong ví dụ trên, phương thức <code>in_thong_tin</code> nhận một đối tượng thuộc lớp <code>HinhHoc</code> hoặc lớp con của nó. Khi gọi phương thức <code>thong_tin</code>, Ruby sẽ tự động gọi phiên bản phù hợp của phương thức dựa trên loại đối tượng thực tế, thể hiện tính đa hình.</p>
+
+            <h3>Phương thức ảo và ghi đè (Virtual Methods and Overriding)</h3>
+            <p>Trong Ruby, tất cả các phương thức đều là "ảo" theo mặc định, nghĩa là chúng có thể được ghi đè trong các lớp con. Khi một lớp con định nghĩa lại một phương thức đã có trong lớp cha, đó gọi là ghi đè (overriding).</p>
+
+            <h4>Ví dụ về phương thức ảo và ghi đè:</h4>
+            <pre><code class="language-ruby">class DongVat
+  def keu
+    "Đang phát ra tiếng kêu..."
+  end
+
+  def gioi_thieu
+    "Tôi là một #{self.class.name}, #{keu}"
+  end
+end
+
+class Cho < DongVat
+  # Ghi đè phương thức keu
+  def keu
+    "Gâu gâu!"
+  end
+end
+
+class Meo < DongVat
+  # Ghi đè phương thức keu
+  def keu
+    "Meo meo!"
+  end
+end
+
+dong_vat = DongVat.new
+cho = Cho.new
+meo = Meo.new
+
+puts dong_vat.gioi_thieu  # Tôi là một DongVat, Đang phát ra tiếng kêu...
+puts cho.gioi_thieu       # Tôi là một Cho, Gâu gâu!
+puts meo.gioi_thieu       # Tôi là một Meo, Meo meo!</code></pre>
+
+            <p>Trong ví dụ trên, phương thức <code>keu</code> là một phương thức ảo được định nghĩa trong lớp <code>DongVat</code> và được ghi đè trong các lớp con <code>Cho</code> và <code>Meo</code>. Phương thức <code>gioi_thieu</code> gọi phương thức <code>keu</code>, và Ruby sẽ tự động gọi phiên bản phù hợp của phương thức <code>keu</code> dựa trên loại đối tượng thực tế.</p>
+
+            <h4>Sử dụng super trong ghi đè:</h4>
+            <pre><code class="language-ruby">class NhanVien
+  attr_reader :ten, :luong_co_ban
+
+  def initialize(ten, luong_co_ban)
+    @ten = ten
+    @luong_co_ban = luong_co_ban
+  end
+
+  def tinh_luong
+    @luong_co_ban
+  end
+
+  def thong_tin
+    "#{@ten} - Lương: #{tinh_luong}"
+  end
+end
+
+class NhanVienKinhDoanh < NhanVien
+  attr_reader :doanh_so
+
+  def initialize(ten, luong_co_ban, doanh_so)
+    super(ten, luong_co_ban)  # Gọi initialize của lớp cha
+    @doanh_so = doanh_so
+  end
+
+  def tinh_luong
+    # Gọi phương thức tinh_luong của lớp cha và thêm hoa hồng
+    super + @doanh_so * 0.1
+  end
+end
+
+nv1 = NhanVien.new("Nguyễn Văn A", 5000000)
+nv2 = NhanVienKinhDoanh.new("Trần Thị B", 5000000, 50000000)
+
+puts nv1.thong_tin  # Nguyễn Văn A - Lương: 5000000
+puts nv2.thong_tin  # Trần Thị B - Lương: 10000000</code></pre>
+
+            <p>Trong ví dụ trên, từ khóa <code>super</code> được sử dụng để gọi phương thức của lớp cha từ phương thức ghi đè trong lớp con. Điều này cho phép lớp con mở rộng hành vi của lớp cha thay vì thay thế hoàn toàn.</p>
+
+            <h3>Singleton Classes và Eigenclass</h3>
+            <p>Trong Ruby, mỗi đối tượng có thể có các phương thức riêng biệt không được chia sẻ với các đối tượng khác cùng lớp. Các phương thức này được định nghĩa trong một lớp đặc biệt gọi là singleton class hoặc eigenclass.</p>
+
+            <h4>Định nghĩa phương thức cho một đối tượng cụ thể:</h4>
+            <pre><code class="language-ruby">doi_tuong = Object.new
+
+# Cách 1: Sử dụng def với cú pháp đặc biệt
+def doi_tuong.phuong_thuc_1
+  "Phương thức 1 của đối tượng"
+end
+
+# Cách 2: Sử dụng singleton_class
+doi_tuong.singleton_class.class_eval do
+  def phuong_thuc_2
+    "Phương thức 2 của đối tượng"
+  end
+end
+
+# Cách 3: Sử dụng class << obj
+class << doi_tuong
+  def phuong_thuc_3
+    "Phương thức 3 của đối tượng"
+  end
+end
+
+puts doi_tuong.phuong_thuc_1  # Phương thức 1 của đối tượng
+puts doi_tuong.phuong_thuc_2  # Phương thức 2 của đối tượng
+puts doi_tuong.phuong_thuc_3  # Phương thức 3 của đối tượng
+
+# Tạo đối tượng khác cùng lớp
+doi_tuong_2 = Object.new
+# doi_tuong_2.phuong_thuc_1  # NoMethodError: undefined method</code></pre>
+
+            <h4>Singleton Methods và Class Methods:</h4>
+            <p>Trong Ruby, phương thức lớp (class method) thực chất là singleton method của đối tượng lớp:</p>
+            <pre><code class="language-ruby">class SinhVien
+  # Phương thức instance
+  def ten_day_du
+    "Sinh viên: #{@ten}"
+  end
+
+  # Phương thức class (singleton method của đối tượng lớp SinhVien)
+  def self.truong
+    "Đại học ABC"
+  end
+
+  # Cách khác để định nghĩa phương thức class
+  class << self
+    def khoa
+      "Công nghệ thông tin"
+    end
+
+    def nganh
+      "Kỹ thuật phần mềm"
+    end
+  end
+end
+
+# Gọi phương thức class
+puts SinhVien.truong  # Đại học ABC
+puts SinhVien.khoa    # Công nghệ thông tin
+puts SinhVien.nganh   # Kỹ thuật phần mềm</code></pre>
+
+            <h4>Ứng dụng của Singleton Classes:</h4>
+            <pre><code class="language-ruby">class CongCu
+  def thuc_hien
+    "Thực hiện công cụ mặc định"
+  end
+end
+
+cong_cu_1 = CongCu.new
+cong_cu_2 = CongCu.new
+cong_cu_3 = CongCu.new
+
+# Tùy chỉnh hành vi cho cong_cu_2
+def cong_cu_2.thuc_hien
+  "Thực hiện công cụ tùy chỉnh"
+end
+
+# Tùy chỉnh hành vi cho cong_cu_3
+class << cong_cu_3
+  def thuc_hien
+    "Thực hiện công cụ đặc biệt"
+  end
+
+  def thuc_hien_nang_cao
+    "Thực hiện tính năng nâng cao"
+  end
+end
+
+puts cong_cu_1.thuc_hien  # Thực hiện công cụ mặc định
+puts cong_cu_2.thuc_hien  # Thực hiện công cụ tùy chỉnh
+puts cong_cu_3.thuc_hien  # Thực hiện công cụ đặc biệt
+puts cong_cu_3.thuc_hien_nang_cao  # Thực hiện tính năng nâng cao</code></pre>
+
+            <h4>Mở rộng đối tượng với Module:</h4>
+            <pre><code class="language-ruby">module TinhNangNangCao
+  def tinh_nang_1
+    "Tính năng nâng cao 1"
+  end
+
+  def tinh_nang_2
+    "Tính năng nâng cao 2"
+  end
+end
+
+doi_tuong = Object.new
+
+# Mở rộng chỉ đối tượng này với module
+doi_tuong.extend(TinhNangNangCao)
+
+puts doi_tuong.tinh_nang_1  # Tính năng nâng cao 1
+puts doi_tuong.tinh_nang_2  # Tính năng nâng cao 2
+
+# Đối tượng khác không có các phương thức này
+doi_tuong_2 = Object.new
+# doi_tuong_2.tinh_nang_1  # NoMethodError: undefined method</code></pre>
+
+            <p>Singleton classes và eigenclass là một tính năng mạnh mẽ của Ruby, cho phép tùy chỉnh hành vi của từng đối tượng cụ thể mà không ảnh hưởng đến các đối tượng khác cùng lớp. Điều này tạo ra sự linh hoạt cao trong việc thiết kế và triển khai các ứng dụng.</p>
+
+            <h3>Method Missing và Metaprogramming cơ bản</h3>
+            <p>Metaprogramming là kỹ thuật viết code để tạo ra hoặc sửa đổi code khác trong thời gian chạy. Ruby cung cấp nhiều tính năng mạnh mẽ cho metaprogramming, và một trong những tính năng quan trọng nhất là <code>method_missing</code>.</p>
+
+            <h4>Method Missing:</h4>
+            <p><code>method_missing</code> là một phương thức đặc biệt được gọi khi Ruby không tìm thấy phương thức được yêu cầu trong đối tượng. Bằng cách ghi đè phương thức này, bạn có thể xử lý các cuộc gọi phương thức không tồn tại theo cách riêng của mình.</p>
+
+            <pre><code class="language-ruby">class TuDien
+  def initialize
+    @du_lieu = {
+      "hello" => "xin chào",
+      "goodbye" => "tạm biệt",
+      "thank you" => "cảm ơn",
+      "sorry" => "xin lỗi"
+    }
+  end
+
+  def method_missing(ten_phuong_thuc, *tham_so, &khoi_lenh)
+    ten_tu = ten_phuong_thuc.to_s
+
+    if @du_lieu.has_key?(ten_tu)
+      @du_lieu[ten_tu]
+    else
+      "Không tìm thấy từ '#{ten_tu}' trong từ điển"
+    end
+  end
+
+  def respond_to_missing?(ten_phuong_thuc, include_private = false)
+    @du_lieu.has_key?(ten_phuong_thuc.to_s) || super
+  end
+end
+
+tu_dien = TuDien.new
+puts tu_dien.hello       # xin chào
+puts tu_dien.goodbye     # tạm biệt
+puts tu_dien.thank_you   # Không tìm thấy từ 'thank_you' trong từ điển
+puts tu_dien.send("thank you")  # cảm ơn</code></pre>
+
+            <p>Trong ví dụ trên, khi gọi <code>tu_dien.hello</code>, Ruby không tìm thấy phương thức <code>hello</code> trong lớp <code>TuDien</code>, nên nó gọi <code>method_missing</code> với tên phương thức là <code>:hello</code>. Phương thức <code>method_missing</code> kiểm tra xem từ này có trong từ điển không và trả về nghĩa tương ứng.</p>
+
+            <p>Lưu ý rằng khi ghi đè <code>method_missing</code>, bạn cũng nên ghi đè <code>respond_to_missing?</code> để đảm bảo rằng <code>respond_to?</code> hoạt động chính xác.</p>
+
+            <h4>Metaprogramming cơ bản:</h4>
+            <p>Ruby cung cấp nhiều công cụ cho metaprogramming, bao gồm <code>define_method</code>, <code>class_eval</code>, <code>instance_eval</code>, và <code>send</code>.</p>
+
+            <pre><code class="language-ruby">class SinhVien
+  attr_accessor :ho_ten, :tuoi
+
+  def initialize(ho_ten, tuoi)
+    @ho_ten = ho_ten
+    @tuoi = tuoi
+  end
+end
+
+# Thêm phương thức vào lớp trong thời gian chạy
+SinhVien.class_eval do
+  def chao
+    "Xin chào, tôi là #{@ho_ten}!"
+  end
+
+  # Sử dụng define_method để tạo phương thức
+  define_method :thong_tin do
+    "Họ tên: #{@ho_ten}, Tuổi: #{@tuoi}"
+  end
+end
+
+sv = SinhVien.new("Nguyễn Văn A", 20)
+puts sv.chao        # Xin chào, tôi là Nguyễn Văn A!
+puts sv.thong_tin   # Họ tên: Nguyễn Văn A, Tuổi: 20
+
+# Sử dụng send để gọi phương thức theo tên
+puts sv.send(:ho_ten)  # Nguyễn Văn A
+sv.send(:ho_ten=, "Nguyễn Văn B")
+puts sv.ho_ten         # Nguyễn Văn B</code></pre>
+
+            <h4>Tạo phương thức động với define_method:</h4>
+            <pre><code class="language-ruby">class ThuVien
+  def initialize
+    @sach = []
+  end
+
+  # Tạo các phương thức tìm kiếm động
+  ["tieu_de", "tac_gia", "nam_xuat_ban"].each do |thuoc_tinh|
+    define_method "tim_theo_#{thuoc_tinh}" do |gia_tri|
+      @sach.select { |s| s[thuoc_tinh.to_sym] == gia_tri }
+    end
+  end
+
+  def them_sach(sach)
+    @sach << sach
+  end
+end
+
+thu_vien = ThuVien.new
+thu_vien.them_sach({ tieu_de: "Ruby Programming", tac_gia: "Matz", nam_xuat_ban: 2000 })
+thu_vien.them_sach({ tieu_de: "The Ruby Way", tac_gia: "Hal Fulton", nam_xuat_ban: 2015 })
+thu_vien.them_sach({ tieu_de: "Ruby Cookbook", tac_gia: "Lucas Carlson", nam_xuat_ban: 2015 })
+
+puts "Sách của Matz:"
+p thu_vien.tim_theo_tac_gia("Matz")
+
+puts "Sách xuất bản năm 2015:"
+p thu_vien.tim_theo_nam_xuat_ban(2015)</code></pre>
+
+            <h4>Sử dụng instance_eval và class_eval:</h4>
+            <pre><code class="language-ruby">class SanPham
+  attr_accessor :ten, :gia
+
+  def initialize(ten, gia)
+    @ten = ten
+    @gia = gia
+  end
+end
+
+sp = SanPham.new("Laptop", 15000000)
+
+# Sử dụng instance_eval để thêm phương thức cho một đối tượng cụ thể
+sp.instance_eval do
+  def giam_gia(phan_tram)
+    @gia = @gia * (1 - phan_tram / 100.0)
+    "Giá sau khi giảm #{phan_tram}%: #{@gia}"
+  end
+end
+
+puts sp.giam_gia(10)  # Giá sau khi giảm 10%: 13500000.0
+
+# Sử dụng class_eval để thêm phương thức cho tất cả các đối tượng của lớp
+SanPham.class_eval do
+  def thong_tin
+    "#{@ten} - #{@gia} VND"
+  end
+end
+
+puts sp.thong_tin  # Laptop - 13500000.0 VND</code></pre>
+
+            <h3>Thực hành</h3>
+
+            <h4>Bài 1: Xây dựng lớp ActiveRecord đơn giản</h4>
+            <p>Trong bài tập này, chúng ta sẽ xây dựng một lớp ActiveRecord đơn giản để mô phỏng cách Rails xử lý các model.</p>
+
+            <pre><code class="language-ruby">class ActiveRecord
+  @@objects = {}
+
+  def self.inherited(subclass)
+    @@objects[subclass] = []
+  end
+
+  def self.create(attributes = {})
+    object = new
+    attributes.each do |key, value|
+      object.send("#{key}=", value)
+    end
+    @@objects[self] << object
+    object
+  end
+
+  def self.all
+    @@objects[self]
+  end
+
+  def self.find_by(attributes)
+    @@objects[self].find do |object|
+      attributes.all? { |key, value| object.send(key) == value }
+    end
+  end
+
+  def self.where(attributes)
+    @@objects[self].select do |object|
+      attributes.all? { |key, value| object.send(key) == value }
+    end
+  end
+
+  def self.count
+    @@objects[self].size
+  end
+end
+
+class User < ActiveRecord
+  attr_accessor :id, :name, :email, :age
+
+  def initialize
+    @id = self.class.count + 1
+  end
+
+  def to_s
+    "User ##{@id}: #{@name} (#{@email}), #{@age} tuổi"
+  end
+end
+
+# Sử dụng lớp ActiveRecord
+user1 = User.create(name: "Nguyễn Văn A", email: "a@example.com", age: 25)
+user2 = User.create(name: "Trần Thị B", email: "b@example.com", age: 30)
+user3 = User.create(name: "Lê Văn C", email: "c@example.com", age: 25)
+
+puts "Tất cả người dùng:"
+User.all.each { |user| puts user }
+
+puts "\nTìm người dùng theo email:"
+puts User.find_by(email: "b@example.com")
+
+puts "\nTìm người dùng theo tuổi:"
+User.where(age: 25).each { |user| puts user }</code></pre>
+
+            <h4>Bài 2: Xây dựng DSL (Domain Specific Language) đơn giản</h4>
+            <p>Trong bài tập này, chúng ta sẽ xây dựng một DSL đơn giản để mô tả một bài kiểm tra.</p>
+
+            <pre><code class="language-ruby">class BaiKiemTra
+  attr_reader :ten, :cau_hoi
+
+  def initialize(ten, &block)
+    @ten = ten
+    @cau_hoi = []
+    instance_eval(&block) if block_given?
+  end
+
+  def cau_hoi(noi_dung, diem = 1, &block)
+    cau_hoi_moi = CauHoi.new(noi_dung, diem, &block)
+    @cau_hoi << cau_hoi_moi
+    cau_hoi_moi
+  end
+
+  def tong_diem
+    @cau_hoi.sum(&:diem)
+  end
+
+  def to_s
+    result = "Bài kiểm tra: #{@ten}\n"
+    result += "Tổng điểm: #{tong_diem}\n"
+    result += "Câu hỏi:\n"
+
+    @cau_hoi.each_with_index do |cau_hoi, index|
+      result += "#{index + 1}. #{cau_hoi.noi_dung} (#{cau_hoi.diem} điểm)\n"
+
+      cau_hoi.lua_chon.each_with_index do |lua_chon, i|
+        result += "   #{('A'.ord + i).chr}. #{lua_chon}\n"
+      end
+
+      result += "   Đáp án đúng: #{('A'.ord + cau_hoi.dap_an).chr}\n"
+    end
+
+    result
+  end
+end
+
+class CauHoi
+  attr_reader :noi_dung, :diem, :lua_chon, :dap_an
+
+  def initialize(noi_dung, diem, &block)
+    @noi_dung = noi_dung
+    @diem = diem
+    @lua_chon = []
+    @dap_an = nil
+    instance_eval(&block) if block_given?
+  end
+
+  def lua_chon(noi_dung, dung = false)
+    @lua_chon << noi_dung
+    @dap_an = @lua_chon.size - 1 if dung
+  end
+end
+
+# Sử dụng DSL để tạo bài kiểm tra
+bai_kiem_tra = BaiKiemTra.new("Kiểm tra Ruby cơ bản") do
+  cau_hoi "Ruby được phát triển bởi ai?", 2 do
+    lua_chon "Guido van Rossum"
+    lua_chon "Yukihiro Matsumoto", true
+    lua_chon "James Gosling"
+    lua_chon "Brendan Eich"
+  end
+
+  cau_hoi "Phiên bản Ruby đầu tiên được phát hành vào năm nào?", 1 do
+    lua_chon "1991"
+    lua_chon "1993"
+    lua_chon "1995", true
+    lua_chon "1997"
+  end
+
+  cau_hoi "Trong Ruby, mọi thứ đều là gì?", 2 do
+    lua_chon "Biến"
+    lua_chon "Hàm"
+    lua_chon "Đối tượng", true
+    lua_chon "Lớp"
+  end
+end
+
+puts bai_kiem_tra</code></pre>
+        </section>
+    </main>
+    <footer>
+        <div class="lesson-navigation" style="padding: 20px;">
+            <a href="../ruby-basic/1.3-lap-trinh-huong-doi-tuong.html" class="prev">Back</a>
+            <a href="2-xu-ly-ngoai-le-va-nhap-xuat.html" class="next">Next</a>
+        </div>
+    </footer>
+</body>
+</html>

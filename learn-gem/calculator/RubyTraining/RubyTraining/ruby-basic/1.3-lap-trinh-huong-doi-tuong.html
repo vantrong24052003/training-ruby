@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lập Trình Hướng Đối Tượng (OOP) với Ruby</title>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.25.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.25.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.25.0/components/prism-ruby.min.js"></script>
+</head>
+<body>
+    <header>
+        <h1 style="text-align: center; color: #fff;">Ruby Basic</h1>
+    </header>
+    <div class="navigation" style="text-align: center; font-size: 20px;">
+      <a href="../index.html" class="home">Home</a>
+    </div>
+    <main>
+        <section class="lesson-content">
+            <h2>1.3 Lập Trình Hướng Đối Tượng (OOP) với Ruby</h2>
+
+            <h3>Giới thiệu về OOP</h3>
+            <p>Lập trình hướng đối tượng (Object-Oriented Programming - OOP) là một phương pháp lập trình dựa trên khái niệm về "đối tượng", trong đó dữ liệu và hành vi được đóng gói lại với nhau. Ruby là một ngôn ngữ thuần hướng đối tượng, nghĩa là mọi thứ trong Ruby đều là đối tượng.</p>
+
+            <h4>Các nguyên tắc cơ bản của OOP:</h4>
+            <ul>
+                <li><strong>Tính đóng gói (Encapsulation)</strong>: Che giấu thông tin và chi tiết triển khai bên trong đối tượng.</li>
+                <li><strong>Tính kế thừa (Inheritance)</strong>: Cho phép một lớp kế thừa thuộc tính và phương thức từ lớp khác.</li>
+                <li><strong>Tính đa hình (Polymorphism)</strong>: Cho phép các đối tượng khác nhau phản ứng khác nhau với cùng một thông điệp.</li>
+                <li><strong>Tính trừu tượng (Abstraction)</strong>: Tập trung vào các đặc điểm cần thiết của đối tượng và bỏ qua các chi tiết không quan trọng.</li>
+            </ul>
+
+            <h3>Tạo và sử dụng lớp</h3>
+            <p>Trong Ruby, lớp (class) là bản thiết kế cho các đối tượng. Lớp định nghĩa các thuộc tính (biến instance) và hành vi (phương thức) mà các đối tượng của lớp đó sẽ có.</p>
+
+            <h4>Định nghĩa lớp:</h4>
+            <pre><code class="language-ruby">class SinhVien
+  # Phương thức khởi tạo
+  def initialize(ho_ten, tuoi, diem)
+    @ho_ten = ho_ten  # Biến instance
+    @tuoi = tuoi
+    @diem = diem
+  end
+
+  # Phương thức getter
+  def ho_ten
+    @ho_ten
+  end
+
+  def tuoi
+    @tuoi
+  end
+
+  def diem
+    @diem
+  end
+
+  # Phương thức setter
+  def diem=(diem_moi)
+    @diem = diem_moi
+  end
+
+  # Phương thức instance
+  def thong_tin
+    "Họ tên: #{@ho_ten}, Tuổi: #{@tuoi}, Điểm: #{@diem}"
+  end
+
+  # Phương thức kiểm tra đạt/không đạt
+  def dat?
+    @diem >= 5
+  end
+
+  # Phương thức class (static method)
+  def self.so_sanh(sv1, sv2)
+    sv1.diem <=> sv2.diem
+  end
+end
+
+# Tạo đối tượng từ lớp
+sv1 = SinhVien.new("Nguyễn Văn A", 20, 8.5)
+puts sv1.thong_tin  # Họ tên: Nguyễn Văn A, Tuổi: 20, Điểm: 8.5
+puts "Đạt: #{sv1.dat?}"  # Đạt: true
+
+# Thay đổi thuộc tính
+sv1.diem = 4.5
+puts sv1.thong_tin  # Họ tên: Nguyễn Văn A, Tuổi: 20, Điểm: 4.5
+puts "Đạt: #{sv1.dat?}"  # Đạt: false</code></pre>
+
+            <h4>Sử dụng attr_accessor, attr_reader, attr_writer:</h4>
+            <p>Ruby cung cấp các phương thức để tự động tạo getter và setter:</p>
+            <pre><code class="language-ruby">class SinhVien
+  # Tự động tạo getter và setter cho các thuộc tính
+  attr_accessor :ho_ten, :diem
+
+  # Chỉ tạo getter (chỉ đọc)
+  attr_reader :tuoi
+
+  # Chỉ tạo setter (chỉ ghi)
+  attr_writer :dia_chi
+
+  def initialize(ho_ten, tuoi, diem)
+    @ho_ten = ho_ten
+    @tuoi = tuoi
+    @diem = diem
+    @dia_chi = nil
+  end
+
+  def thong_tin
+    "Họ tên: #{@ho_ten}, Tuổi: #{@tuoi}, Điểm: #{@diem}"
+  end
+end
+
+sv = SinhVien.new("Trần Thị B", 19, 9.0)
+puts sv.ho_ten  # Trần Thị B (sử dụng getter)
+sv.ho_ten = "Trần Thị C"  # Sử dụng setter
+puts sv.ho_ten  # Trần Thị C
+
+puts sv.tuoi  # 19 (chỉ có thể đọc)
+# sv.tuoi = 20  # Lỗi: không có setter
+
+sv.dia_chi = "Hà Nội"  # Sử dụng setter
+# puts sv.dia_chi  # Lỗi: không có getter</code></pre>
+
+            <h4>Kế thừa:</h4>
+            <p>Kế thừa cho phép một lớp (lớp con) kế thừa các thuộc tính và phương thức từ lớp khác (lớp cha).</p>
+            <pre><code class="language-ruby">class Nguoi
+  attr_accessor :ho_ten, :tuoi
+
+  def initialize(ho_ten, tuoi)
+    @ho_ten = ho_ten
+    @tuoi = tuoi
+  end
+
+  def thong_tin
+    "Họ tên: #{@ho_ten}, Tuổi: #{@tuoi}"
+  end
+
+  def chao
+    "Xin chào, tôi là #{@ho_ten}!"
+  end
+end
+
+# SinhVien kế thừa từ Nguoi
+class SinhVien < Nguoi
+  attr_accessor :diem
+
+  def initialize(ho_ten, tuoi, diem)
+    # Gọi phương thức initialize của lớp cha
+    super(ho_ten, tuoi)
+    @diem = diem
+  end
+
+  # Ghi đè (override) phương thức thong_tin
+  def thong_tin
+    # Gọi phương thức thong_tin của lớp cha
+    thong_tin_co_ban = super
+    "#{thong_tin_co_ban}, Điểm: #{@diem}"
+  end
+
+  def dat?
+    @diem >= 5
+  end
+end
+
+sv = SinhVien.new("Lê Văn C", 21, 7.5)
+puts sv.chao  # Xin chào, tôi là Lê Văn C! (kế thừa từ lớp Nguoi)
+puts sv.thong_tin  # Họ tên: Lê Văn C, Tuổi: 21, Điểm: 7.5 (ghi đè)
+puts "Đạt: #{sv.dat?}"  # Đạt: true (phương thức riêng của SinhVien)</code></pre>
+
+            <h3>Module và Mixin</h3>
+            <p>Module trong Ruby là một cơ chế để nhóm các phương thức, hằng số và lớp con. Module không thể tạo ra các đối tượng, nhưng có thể được "mix in" vào các lớp để cung cấp thêm chức năng.</p>
+
+            <h4>Định nghĩa Module:</h4>
+            <pre><code class="language-ruby">module HienThi
+  def in_hoa
+    self.upcase
+  end
+
+  def in_thuong
+    self.downcase
+  end
+
+  def in_hoa_chu_cai_dau
+    self.capitalize
+  end
+end
+
+# Mở rộng lớp String với module HienThi
+class String
+  include HienThi
+end
+
+ten = "nguyen van a"
+puts ten.in_hoa_chu_cai_dau  # Nguyen van a
+puts ten.in_hoa  # NGUYEN VAN A</code></pre>
+
+            <h4>Sử dụng Module làm namespace:</h4>
+            <pre><code class="language-ruby">module ToanHoc
+  PI = 3.14159
+
+  def self.binh_phuong(x)
+    x * x
+  end
+
+  def self.can_bac_hai(x)
+    Math.sqrt(x)
+  end
+
+  class PhanSo
+    attr_reader :tu_so, :mau_so
+
+    def initialize(tu_so, mau_so)
+      @tu_so = tu_so
+      @mau_so = mau_so
+    end
+
+    def to_s
+      "#{@tu_so}/#{@mau_so}"
+    end
+  end
+end
+
+# Sử dụng hằng số từ module
+puts ToanHoc::PI  # 3.14159
+
+# Gọi phương thức module
+puts ToanHoc.binh_phuong(5)  # 25
+
+# Tạo đối tượng từ lớp trong module
+phan_so = ToanHoc::PhanSo.new(3, 4)
+puts phan_so  # 3/4</code></pre>
+
+            <h4>Mixin với nhiều Module:</h4>
+            <pre><code class="language-ruby">module HanhDong
+  def di_chuyen
+    "Đang di chuyển..."
+  end
+
+  def dung_lai
+    "Đã dừng lại."
+  end
+end
+
+module PhatTieng
+  def keu
+    "Đang phát tiếng..."
+  end
+end
+
+class DongVat
+  attr_reader :ten
+
+  def initialize(ten)
+    @ten = ten
+  end
+end
+
+class Cho < DongVat
+  include HanhDong
+  include PhatTieng
+
+  def keu
+    "Gâu gâu!"
+  end
+end
+
+class Meo < DongVat
+  include HanhDong
+  include PhatTieng
+
+  def keu
+    "Meo meo!"
+  end
+end
+
+cho = Cho.new("Buddy")
+puts "#{cho.ten}: #{cho.keu}"  # Buddy: Gâu gâu!
+puts "#{cho.ten}: #{cho.di_chuyen}"  # Buddy: Đang di chuyển...
+
+meo = Meo.new("Kitty")
+puts "#{meo.ten}: #{meo.keu}"  # Kitty: Meo meo!
+puts "#{meo.ten}: #{meo.dung_lai}"  # Kitty: Đã dừng lại.</code></pre>
+
+            <h3>Thực hành OOP</h3>
+
+            <h4>Bài 1: Xây dựng hệ thống quản lý thư viện</h4>
+            <pre><code class="language-ruby">class Sach
+  attr_accessor :tieu_de, :tac_gia, :nam_xuat_ban, :da_muon
+
+  def initialize(tieu_de, tac_gia, nam_xuat_ban)
+    @tieu_de = tieu_de
+    @tac_gia = tac_gia
+    @nam_xuat_ban = nam_xuat_ban
+    @da_muon = false
+  end
+
+  def thong_tin
+    "#{@tieu_de} (#{@tac_gia}, #{@nam_xuat_ban}) - #{@da_muon ? 'Đã mượn' : 'Có sẵn'}"
+  end
+end
+
+class ThuVien
+  def initialize
+    @danh_sach_sach = []
+  end
+
+  def them_sach(sach)
+    @danh_sach_sach << sach
+  end
+
+  def tim_sach(tieu_de)
+    @danh_sach_sach.find { |sach| sach.tieu_de.downcase.include?(tieu_de.downcase) }
+  end
+
+  def muon_sach(tieu_de)
+    sach = tim_sach(tieu_de)
+    if sach.nil?
+      "Không tìm thấy sách."
+    elsif sach.da_muon
+      "Sách đã được mượn."
+    else
+      sach.da_muon = true
+      "Mượn sách thành công: #{sach.thong_tin}"
+    end
+  end
+
+  def tra_sach(tieu_de)
+    sach = tim_sach(tieu_de)
+    if sach.nil?
+      "Không tìm thấy sách."
+    elsif !sach.da_muon
+      "Sách chưa được mượn."
+    else
+      sach.da_muon = false
+      "Trả sách thành công: #{sach.thong_tin}"
+    end
+  end
+
+  def danh_sach_sach
+    @danh_sach_sach.map(&:thong_tin)
+  end
+end
+
+# Sử dụng hệ thống quản lý thư viện
+thu_vien = ThuVien.new
+
+# Thêm sách
+thu_vien.them_sach(Sach.new("Ruby Programming", "Matz", 2000))
+thu_vien.them_sach(Sach.new("The Ruby Way", "Hal Fulton", 2015))
+thu_vien.them_sach(Sach.new("Eloquent Ruby", "Russ Olsen", 2011))
+
+# Hiển thị danh sách sách
+puts "Danh sách sách:"
+thu_vien.danh_sach_sach.each { |sach| puts "- #{sach}" }
+
+# Mượn sách
+puts thu_vien.muon_sach("Ruby Programming")
+puts thu_vien.muon_sach("Ruby Programming")  # Thử mượn lại
+
+# Trả sách
+puts thu_vien.tra_sach("Ruby Programming")
+
+# Hiển thị danh sách sách sau khi mượn/trả
+puts "\nDanh sách sách sau khi mượn/trả:"
+thu_vien.danh_sach_sach.each { |sach| puts "- #{sach}" }</code></pre>
+
+            <h4>Bài 2: Xây dựng ứng dụng ngân hàng với Module</h4>
+            <pre><code class="language-ruby">module KiemTraSoDu
+  def kiem_tra_so_du(so_tien)
+    so_du >= so_tien
+  end
+end
+
+module GiaoDich
+  def ghi_nhan_giao_dich(loai, so_tien, mo_ta = nil)
+    thoi_gian = Time.now.strftime("%d/%m/%Y %H:%M:%S")
+    giao_dich = {
+      thoi_gian: thoi_gian,
+      loai: loai,
+      so_tien: so_tien,
+      mo_ta: mo_ta,
+      so_du: @so_du
+    }
+    @lich_su_giao_dich << giao_dich
+    giao_dich
+  end
+
+  def in_lich_su_giao_dich
+    puts "LỊCH SỬ GIAO DỊCH:"
+    puts "%-20s %-10s %-15s %-20s %-10s" % ["Thời gian", "Loại", "Số tiền", "Mô tả", "Số dư"]
+    puts "-" * 80
+
+    @lich_su_giao_dich.each do |gd|
+      puts "%-20s %-10s %-15s %-20s %-10s" % [
+        gd[:thoi_gian],
+        gd[:loai],
+        gd[:loai] == "Rút tiền" ? "-#{gd[:so_tien]}" : gd[:so_tien],
+        gd[:mo_ta] || "",
+        gd[:so_du]
+      ]
+    end
+  end
+end
+
+class TaiKhoan
+  include KiemTraSoDu
+  include GiaoDich
+
+  attr_reader :so_tai_khoan, :chu_tai_khoan, :so_du
+
+  def initialize(so_tai_khoan, chu_tai_khoan, so_du_ban_dau = 0)
+    @so_tai_khoan = so_tai_khoan
+    @chu_tai_khoan = chu_tai_khoan
+    @so_du = so_du_ban_dau
+    @lich_su_giao_dich = []
+
+    # Ghi nhận giao dịch đầu tiên
+    ghi_nhan_giao_dich("Tạo TK", so_du_ban_dau, "Tạo tài khoản mới")
+  end
+
+  def nap_tien(so_tien)
+    if so_tien > 0
+      @so_du += so_tien
+      ghi_nhan_giao_dich("Nạp tiền", so_tien)
+      "Nạp tiền thành công. Số dư hiện tại: #{@so_du}"
+    else
+      "Số tiền không hợp lệ."
+    end
+  end
+
+  def rut_tien(so_tien)
+    if so_tien > 0
+      if kiem_tra_so_du(so_tien)
+        @so_du -= so_tien
+        ghi_nhan_giao_dich("Rút tiền", so_tien)
+        "Rút tiền thành công. Số dư hiện tại: #{@so_du}"
+      else
+        "Số dư không đủ."
+      end
+    else
+      "Số tiền không hợp lệ."
+    end
+  end
+
+  def chuyen_khoan(tai_khoan_nhan, so_tien)
+    if so_tien > 0
+      if kiem_tra_so_du(so_tien)
+        @so_du -= so_tien
+        ghi_nhan_giao_dich("Chuyển đi", so_tien, "Đến: #{tai_khoan_nhan.so_tai_khoan}")
+
+        tai_khoan_nhan.nhan_chuyen_khoan(self, so_tien)
+        "Chuyển khoản thành công. Số dư hiện tại: #{@so_du}"
+      else
+        "Số dư không đủ."
+      end
+    else
+      "Số tiền không hợp lệ."
+    end
+  end
+
+  def nhan_chuyen_khoan(tai_khoan_gui, so_tien)
+    @so_du += so_tien
+    ghi_nhan_giao_dich("Nhận tiền", so_tien, "Từ: #{tai_khoan_gui.so_tai_khoan}")
+  end
+
+  def thong_tin
+    "Tài khoản: #{@so_tai_khoan}, Chủ TK: #{@chu_tai_khoan}, Số dư: #{@so_du}"
+  end
+end
+
+# Sử dụng ứng dụng ngân hàng
+tk1 = TaiKhoan.new("123456", "Nguyễn Văn A", 1000000)
+tk2 = TaiKhoan.new("789012", "Trần Thị B", 500000)
+
+puts tk1.thong_tin
+puts tk2.thong_tin
+
+puts tk1.nap_tien(500000)
+puts tk1.rut_tien(200000)
+puts tk1.chuyen_khoan(tk2, 300000)
+
+puts "\n#{tk1.thong_tin}"
+puts "#{tk2.thong_tin}"
+
+puts "\nLịch sử giao dịch của tài khoản #{tk1.so_tai_khoan}:"
+tk1.in_lich_su_giao_dich
+
+puts "\nLịch sử giao dịch của tài khoản #{tk2.so_tai_khoan}:"
+tk2.in_lich_su_giao_dich</code></pre>
+        </section>
+    </main>
+    <footer>
+        <div class="lesson-navigation" style="padding: 20px;">
+            <a href="1.2.2-blocks-procs-lambdas.html" class="prev">Back</a>
+            <a href="../ruby-advance/1-oop-nang-cao.html" class="next">Next</a>
+        </div>
+    </footer>
+</body>
+</html>
